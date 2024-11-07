@@ -28,6 +28,8 @@
                 <li><a href="Libros.php" class="nav-link">Libros</a></li>
                 <li><a href="" class="nav-link">Contactos</a></li>
                 <li><a href="" class="nav-link">Preguntas Frecuentes</a></li>
+                <li><a href="../Paginas/Perfil.php" class="nav-link">Perfil</a></li>
+
             </ul>
         </nav>
     </div>
