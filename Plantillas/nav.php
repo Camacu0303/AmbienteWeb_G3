@@ -23,6 +23,9 @@
                 </button>
             </div>
         </form>
+        <div class="login-container">
+            <a href="login.php" class="login-button">Iniciar Sesión</a>
+        </div>
         <nav>
             <ul class="navbar_ul">
                 <li><a href="index.php" class="nav-link">Inicio</a></li>
@@ -125,25 +128,6 @@
 
         }
 
-        /* Boton inicio de sesión */
-        .login-container {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-        }
-
-        .login-button {
-            padding: 8px 12px;
-            background-color: #8B4513;
-            color: #fff;
-            text-decoration: none;
-            border-radius: 4px;
-            font-weight: bold;
-        }
-
-        .login-button:hover {
-            background-color: #A0522D;
-        }
     </style>
 </body>
 
