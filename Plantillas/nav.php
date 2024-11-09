@@ -127,7 +127,25 @@
             margin-right: 0;
 
         }
+        /* Boton inicio de sesión */
+        .login-container {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+        }
 
+        .login-button {
+            padding: 8px 12px;
+            background-color: #8B4513;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 4px;
+            font-weight: bold;
+        }
+
+        .login-button:hover {
+            background-color: #A0522D;
+        }
     </style>
 </body>
 
