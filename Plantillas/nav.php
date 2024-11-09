@@ -144,7 +144,6 @@
         .login-button:hover {
             background-color: #A0522D;
         }
-        
     </style>
 </body>
 
