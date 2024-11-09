@@ -16,7 +16,8 @@
     <div class="navContainer">
         <form target="#">
             <div class="input-group">
-                <input type="text" class="form-control" placeholder="Ingrese un parámetro de búsqueda... Don Quijote de la Mancha">
+                <input type="text" class="form-control"
+                    placeholder="Ingrese un parámetro de búsqueda... Don Quijote de la Mancha">
                 <button class="lens" type="submit">
                     <i class="bi bi-search"></i>
                 </button>
@@ -48,11 +49,13 @@
         .active {
             border-bottom: 2px solid black;
         }
-        .lens{
+
+        .lens {
             border-top-right-radius: 15px;
             border-bottom-right-radius: 15px;
             border: 0px;
         }
+
         .navImage {
             height: 300px;
             width: 100%;
@@ -74,16 +77,19 @@
             width: 100%;
             background-color: #B79188;
         }
+
         form {
             display: flex;
             justify-content: center;
             align-items: center;
             margin: 15px 0;
         }
+
         form .input-group {
             width: 50%;
             padding-top: 15px;
         }
+
         form .form-control {
             border-radius: 15px 0 0 15px;
             border: none;
@@ -91,7 +97,8 @@
         }
 
         form .btn {
-            border-radius: 0 15px 15px 0; /* Rounded corners for the button */
+            border-radius: 0 15px 15px 0;
+            /* Rounded corners for the button */
             border: none;
         }
 
@@ -108,12 +115,36 @@
         nav ul li {
             margin-right: 50px;
         }
-        button{
+
+        button {
             background-color: white;
         }
+
         nav ul li:last-child {
             margin-right: 0;
+
         }
+
+        /* Boton inicio de sesión */
+        .login-container {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+        }
+
+        .login-button {
+            padding: 8px 12px;
+            background-color: #8B4513;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 4px;
+            font-weight: bold;
+        }
+
+        .login-button:hover {
+            background-color: #A0522D;
+        }
+        
     </style>
 </body>
 
