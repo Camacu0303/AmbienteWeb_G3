@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -5,9 +6,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Bootstrap Navbar Example</title>
-    <!-- Bootstrap CSS -->
+
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Bootstrap Icons -->
+
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
 </head>
 
@@ -30,10 +31,9 @@
             <ul class="navbar_ul">
                 <li><a href="index.php" class="nav-link">Inicio</a></li>
                 <li><a href="Libros.php" class="nav-link">Libros</a></li>
-                <li><a href="" class="nav-link">Contactos</a></li>
+                <li><a href="Contact.php" class="nav-link">Contacto</a></li>
+                <li><a href="Perfil.php" class="nav-link">Perfil</a></li>
                 <li><a href="" class="nav-link">Preguntas Frecuentes</a></li>
-                <li><a href="../Paginas/Perfil.php" class="nav-link">Perfil</a></li>
-
             </ul>
         </nav>
     </div>
@@ -52,7 +52,6 @@
         .active {
             border-bottom: 2px solid black;
         }
-
         .lens {
             border-top-right-radius: 15px;
             border-bottom-right-radius: 15px;
@@ -101,7 +100,7 @@
 
         form .btn {
             border-radius: 0 15px 15px 0;
-            /* Rounded corners for the button */
+          
             border: none;
         }
 
@@ -127,7 +126,6 @@
             margin-right: 0;
 
         }
-        /* Boton inicio de sesión */
         .login-container {
             position: absolute;
             top: 20px;
