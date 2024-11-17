@@ -30,7 +30,7 @@
         <nav>
             <ul class="navbar_ul">
                 <li><a href="index.php" class="nav-link">Inicio</a></li>
-                <li><a href="Libros.php" class="nav-link">Libros</a></li>
+                <li><a href="Catalogo.php" class="nav-link">Catalogo</a></li>
                 <li><a href="Contact.php" class="nav-link">Contacto</a></li>
                 <li><a href="Perfil.php" class="nav-link">Perfil</a></li>
                 <li><a href="" class="nav-link">Preguntas Frecuentes</a></li>
