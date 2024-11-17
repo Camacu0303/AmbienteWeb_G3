@@ -7,7 +7,7 @@ $libro = [
     "autor" => "Autor 1",
     "categoria" => "Ficción",
     "formato" => "PDF",
-    "imagen" => "../Images/Libros_Catalogo.jpg",
+    "imagen" => "../Images/LibroC.jpg",
     "descripcion" => "Descripcion del libro.",
     "reseñas" => [
         ["autor" => "Usuario 1", "comentario" => "Comentario."],

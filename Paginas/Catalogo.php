@@ -7,21 +7,21 @@ $libros = [
         "autor" => "Autor 1",
         "categoria" => "Ficción",
         "formato" => "",
-        "imagen" => "../Images/Libros_Catalogo.jpg"
+        "imagen" => "../Images/LibroC.jpg"
     ],
     [
         "titulo" => " Libro 2",
         "autor" => "Autor 2",
         "categoria" => "Novela",
         "formato" => "",
-        "imagen" => "../Images/Libros_Catalogo.jpg"
+        "imagen" => "../Images/LibroC.jpg"
     ],
     [
         "titulo" => "Libro 3",
         "autor" => "Autor 3",
         "categoria" => "Historia",
         "formato" => "",
-        "imagen" => "../Images/Libros_Catalogo.jpg"
+        "imagen" => "../Images/LibroC.jpg"
     ]
 ];
 
