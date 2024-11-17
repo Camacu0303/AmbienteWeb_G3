@@ -1,10 +1,9 @@
 <!DOCTYPE html>
 <html lang="es">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Recuperar Contraseña</title>
+    <title>Ingresar Contraseña Temporal</title>
     <style>
         * {
             margin: 0;
@@ -21,7 +20,7 @@
             background-color: #f4f4f4;
         }
 
-        .recovery-container {
+        .container {
             display: flex;
             width: 800px;
             height: 500px;
@@ -31,24 +30,16 @@
             overflow: hidden;
         }
 
-        .recovery-image {
+        .image-section {
             width: 50%;
             background-color: #e7d6c4;
             background-image: url('../Images/libros.jpg');
             background-size: cover;
             background-repeat: no-repeat;
             background-position: center;
-            display: flex;
-            align-items: center;
-            justify-content: center;
         }
 
-        .recovery-image img {
-            width: 100px;
-            height: 100px;
-        }
-
-        .recovery-form-container {
+        .form-section {
             width: 50%;
             padding: 40px;
             display: flex;
@@ -64,26 +55,14 @@
             text-align: center;
         }
 
-        .recovery-instructions {
+        .input-container {
             font-size: 14px;
             color: #555;
             margin-bottom: 20px;
             text-align: center;
-            width: 100%;
         }
 
-        .recovery-form {
-            width: 100%;
-            padding: 20px;
-            background-color: #f4f4f4;
-            border-radius: 8px;
-            box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-
-        .recovery-form input[type="email"] {
+        .input-container input[type="password"] {
             width: 100%;
             padding: 10px;
             margin-bottom: 15px;
@@ -91,7 +70,7 @@
             border-radius: 4px;
         }
 
-        .recovery-button {
+        .submit-button {
             width: 100%;
             padding: 10px;
             background-color: #8B4513;
@@ -102,41 +81,25 @@
             cursor: pointer;
         }
 
-        .recovery-button:hover {
+        .submit-button:hover {
             background-color: #A0522D;
-        }
-
-        .register-text {
-            font-size: 12px;
-            color: #555;
-            text-align: center;
-            margin-top: 20px;
-            width: 100%;
-        }
-
-        .register-text a {
-            color: #8B4513;
-            text-decoration: none;
         }
     </style>
 </head>
-
 <body>
-<div class="recovery-container">
-        <div class="recovery-image"></div>
+    <div class="container">
+        <div class="image-section"></div>
 
-        <div class="recovery-form-container">
-            <h2>Recupera tu cuenta</h2>
-            <p class="recovery-instructions">Introduce tu correo electrónico para enviarte un email con una contraseña temporal</p>
-
-            <form action="recuperar_contraseña.php" method="post" class="recovery-form">
-                <input type="email" id="email" name="email" required placeholder="Correo electrónico">
-                <button type="submit" class="recovery-button">Enviar</button>
+        <div class="form-section">
+            <h2>Favor Ingresar la Contraseña Temporal</h2>
+            <form action="index.php" method="post">
+                <div class="input-container">
+                    <label for="temp_password">Contraseña temporal:</label>
+                    <input type="password" id="temp_password" name="temp_password" required>
+                </div>
+                <button type="submit" class="submit-button">Guardar</button>
             </form>
-
-            <p class="register-text">¿No es un usuario activo? <a href="registro.php">Registrarse</a></p>
         </div>
     </div>
 </body>
-
 </html>
