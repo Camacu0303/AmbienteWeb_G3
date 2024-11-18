@@ -57,32 +57,32 @@ include("../Plantillas/nav.php");
 
     <section id="seccion1">
         <h2>Bienvenidos a MiLibro.com</h2>
-        <p>En nuestra librería, encontrarás una amplia selección de libros de todos los géneros, desde literatura clásica hasta las últimas novedades en ciencia ficción. Nos especializamos en brindarte experiencias literarias únicas.</p>
+        <p>En nuestra librerï¿½a, encontrarï¿½s una amplia selecciï¿½n de libros de todos los gï¿½neros, desde literatura clï¿½sica hasta las ï¿½ltimas novedades en ciencia ficciï¿½n. Nos especializamos en brindarte experiencias literarias ï¿½nicas.</p>
     </section>
 
     <section id="seccion2">
-        <h2>Catálogo de Libros</h2>
+        <h2>Catï¿½logo de Libros</h2>
         <div class="content">
             <div>
-                <h3>Ficción</h3>
+                <h3>Ficciï¿½n</h3>
                 <ul>
                     <li>El Gran Gatsby - F. Scott Fitzgerald</li>
                     <li>1984 - George Orwell</li>
-                    <li>Crónica de una Muerte Anunciada - Gabriel García Márquez</li>
+                    <li>Crï¿½nica de una Muerte Anunciada - Gabriel Garcï¿½a Mï¿½rquez</li>
                 </ul>
             </div>
             <div>
-                <h3>No Ficción</h3>
+                <h3>No Ficciï¿½n</h3>
                 <ul>
                     <li>Sapiens: De Animales a Dioses - Yuval Noah Harari</li>
                     <li>Educated - Tara Westover</li>
-                    <li>El Poder del Hábito - Charles Duhigg</li>
+                    <li>El Poder del Hï¿½bito - Charles Duhigg</li>
                 </ul>
             </div>
             <div>
                 <h3>Infantil</h3>
                 <ul>
-                    <li>El Principito - Antoine de Saint-Exupéry</li>
+                    <li>El Principito - Antoine de Saint-Exupï¿½ry</li>
                     <li>Harry Potter y la Piedra Filosofal - J.K. Rowling</li>
                     <li>Matilda - Roald Dahl</li>
                 </ul>
@@ -91,27 +91,27 @@ include("../Plantillas/nav.php");
     </section>
 
     <section id="seccion3">
-        <h2>Eventos en la Librería</h2>
-        <p>Únete a nosotros en una variedad de eventos, como presentaciones de libros, charlas de autores y talleres literarios.</p>
+        <h2>Eventos en la Librerï¿½a</h2>
+        <p>ï¿½nete a nosotros en una variedad de eventos, como presentaciones de libros, charlas de autores y talleres literarios.</p>
         <ul>
-            <li>Presentación de "El Secreto" - 15 de noviembre</li>
-            <li>Charla con el autor Carlos Ruiz Zafón - 20 de noviembre</li>
+            <li>Presentaciï¿½n de "El Secreto" - 15 de noviembre</li>
+            <li>Charla con el autor Carlos Ruiz Zafï¿½n - 20 de noviembre</li>
             <li>Taller de escritura creativa - 25 de noviembre</li>
         </ul>
     </section>
 
     <section id="seccion4">
         <h2>Contacto</h2>
-        <p>Para más información, no dudes en ponerte en contacto con nosotros:</p>
+        <p>Para mï¿½s informaciï¿½n, no dudes en ponerte en contacto con nosotros:</p>
         <ul>
-            <li>Email: contacto@laplumamagica.com</li>
-            <li>Teléfono: +123 456 789</li>
-            <li>Dirección: Calle de los Libros, 123, Ciudad</li>
+            <li>Email: coder.pruebas.josue@gmail.com</li>
+            <li>Telï¿½fono: +8888-8888</li>
+            <li>Direcciï¿½n: La ciudad del corazon</li>
         </ul>
     </section>
 
     <footer>
-        <p>&copy; 2024 Librería "La Pluma Mágica". Todos los derechos reservados.</p>
+        <p>&copy; 2024 "MiLibro.com". Todos los derechos reservados.</p>
     </footer>
 
 </body>

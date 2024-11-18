@@ -38,22 +38,37 @@ $librosFiltrados = array_filter($libros, function ($libro) use ($filtroCategoria
 });
 ?>
 <!DOCTYPE html>
-<html lang="es">
+<html lang="en">
 
 <head>
     <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Catálogo de Libros</title>
     <style>
+        * {
+            margin: 0px;
+            padding: 0px;
+        }
+
         body {
             font-family: Arial, sans-serif;
-            margin: 20px;
+        }
+
+        .catalogo {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: left;
+            height: 100%;
         }
 
         .libro {
             border: 1px solid #ccc;
             padding: 10px;
             margin-bottom: 10px;
+            width: 90%;
         }
 
         .filters {
@@ -71,16 +86,20 @@ $librosFiltrados = array_filter($libros, function ($libro) use ($filtroCategoria
             object-fit: cover;
             margin-bottom: 10px;
         }
-        .detalle-button{
-            display: inline-block;            
-            padding: 8px 16px;             
-            background-color: #8B4513;            
-            color: #fff; text-decoration: none; 
-            border-radius: 5px; margin-top: 10px; 
-        }.detalle-button:hover {
+
+        .detalle-button {
+            display: inline-block;
+            padding: 8px 16px;
+            background-color: #8B4513;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 5px;
+            margin-top: 10px;
+        }
+
+        .detalle-button:hover {
             background-color: #A0522D;
-        } 
-        
+        }
     </style>
 </head>
 
@@ -118,21 +137,21 @@ $librosFiltrados = array_filter($libros, function ($libro) use ($filtroCategoria
     </form>
 
     <div class="catalogo">
-    <?php if (empty($librosFiltrados)): ?>
-        <p>No se encontraron libros con los filtros seleccionados.</p>
-    <?php else: ?>
-        <?php foreach ($librosFiltrados as $libro): ?>
-            <div class="libro">
-                <h2><?= htmlspecialchars($libro['titulo']) ?></h2>
-                <img src="<?= htmlspecialchars($libro['imagen']) ?>" alt="Imagen de <?= htmlspecialchars($libro['titulo']) ?>" style="width: 150px; height: auto;">
-                <p><strong>Autor:</strong> <?= htmlspecialchars($libro['autor']) ?></p>
-                <p><strong>Categoría:</strong> <?= htmlspecialchars($libro['categoria']) ?></p>
-                <p><strong>Formato:</strong> <?= htmlspecialchars($libro['formato']) ?></p>
-                <a class="detalle-button" href="Detalle.php?id=<?php echo urlencode($libro['titulo']); ?>">Ver detalle</a>
-            </div>
-        <?php endforeach; ?>
-    <?php endif; ?>
-</div>
+        <?php if (empty($librosFiltrados)): ?>
+            <p>No se encontraron libros con los filtros seleccionados.</p>
+        <?php else: ?>
+            <?php foreach ($librosFiltrados as $libro): ?>
+                <div class="libro">
+                    <h2><?= htmlspecialchars($libro['titulo']) ?></h2>
+                    <img src="<?= htmlspecialchars($libro['imagen']) ?>" alt="Imagen de <?= htmlspecialchars($libro['titulo']) ?>" style="width: 150px; height: auto;">
+                    <p><strong>Autor:</strong> <?= htmlspecialchars($libro['autor']) ?></p>
+                    <p><strong>Categoría:</strong> <?= htmlspecialchars($libro['categoria']) ?></p>
+                    <p><strong>Formato:</strong> <?= htmlspecialchars($libro['formato']) ?></p>
+                    <a class="detalle-button" href="Detalle.php?id=<?php echo urlencode($libro['titulo']); ?>">Ver detalle</a>
+                </div>
+            <?php endforeach; ?>
+        <?php endif; ?>
+    </div>
 
 </body>
 
