@@ -1,3 +1,48 @@
+<?php
+require_once '../Utilidades/Conn.php';
+$db = new Database();
+$conn = $db->getConnection();
+session_start();
+function loginUser($conn, $usuario, $enteredPassword)
+{
+    $sql = "SELECT id_usuario, nombre, email, pass, privilegio FROM usuario WHERE usuario = ?";
+    $stmt = $conn->prepare($sql);
+
+    $stmt->bind_param("s", $usuario);
+    $stmt->execute();
+    $result = $stmt->get_result(); // Obtener el resultado de la consulta
+
+    // Verificar si se encontró el usuario
+    if ($result->num_rows > 0) {
+        $row = $result->fetch_assoc(); // Obtener los resultados como un array asociativo
+        // Asignar variables desde el array
+        $id_usuario = $row['id_usuario'];
+        $nombre = $row['nombre'];
+        $email = $row['email'];
+        $storedHash = $row['pass'];
+        $privilegio = $row['privilegio'];
+
+        // Verificar la contraseña ingresada contra el hash
+        if (password_verify($enteredPassword, $storedHash)) {
+            // Almacenar datos del usuario en la sesión, excepto la contraseña
+            $_SESSION['id_usuario'] = $id_usuario;
+            $_SESSION['nombre'] = $nombre;
+            $_SESSION['email'] = $email;
+            $_SESSION['usuario'] = $usuario;
+            $_SESSION['privilegio'] = $privilegio;
+
+            header("Location: index.php");
+            exit();
+        } 
+    }
+}
+if (isset($_POST['login'])) {
+    $usuario = $_POST['username'];
+    $password = $_POST['password'];
+    loginUser($conn, $usuario, $password);
+}
+$db->close();
+?>
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -5,7 +50,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Inicio Sesión</title>
     <style>
-
         * {
             margin: 0;
             padding: 0;
@@ -124,7 +168,7 @@
         <div class="login-form">
             <a href="index.php" class="back-arrow">←</a>
             <h2>Iniciar sesión</h2>
-            <form action="index.php" method="post">
+            <form action="" method="post">
                 <label for="username">Usuario:</label>
                 <input type="text" id="username" name="username" required>
 
@@ -133,11 +177,11 @@
 
                 <a href="recuperar_cuenta.php" class="forgot-password">¿Has olvidado tu contraseña?</a>
 
-                <button type="submit" class="login-button">Continuar</button>
+                <button type="submit" name="login" class="login-button">Continuar</button>
             </form>
-
             <p class="register-text">¿No es un usuario activo? <a href="registro.php">Regístrate</a></p>
         </div>
     </div>
 </body>
+
 </html>

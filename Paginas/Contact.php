@@ -1,7 +1,7 @@
 <?php
+$requiredRole = 'admin'; 
+require_once "../Utilidades/session_checkout.php";
 include("../Plantillas/nav.php");
-include("../Utilidades/mail.php");
-#enviarCorreo("<p>Este es un mensaje de prueba personalizado</p>", "coder.josue@gmail.com", "Campos");
 ?>
 <!DOCTYPE html>
 <html lang="en">

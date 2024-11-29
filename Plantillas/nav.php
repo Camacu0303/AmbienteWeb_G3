@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -24,14 +23,28 @@
         </form>
         <div class="login-container">
             <a href="login.php" class="login-button">Iniciar Sesión</a>
-        </div>
+        </div>    
+        <?php
+        if (session_status() === PHP_SESSION_NONE) {
+            session_start(); 
+        }
+        $menuItems = [
+            ['href' => 'index.php', 'label' => 'Inicio'],
+            ['href' => 'Catalogo.php', 'label' => 'Catálogo'],
+            ['href' => 'Contact.php', 'label' => 'Contacto'],
+            ['href' => 'Perfil.php', 'label' => 'Perfil'],
+            ['href' => '', 'label' => 'Preguntas Frecuentes']
+        ];
+        // Agregar "Gestionar Usuarios" si es administrador
+        if (isset($_SESSION['privilegio']) && $_SESSION['privilegio'] === 'admin') {
+            $menuItems[] = ['href' => 'GestionarUsuarios.php', 'label' => 'Gestionar Usuarios'];
+        }
+        ?>
         <nav>
             <ul class="navbar_ul">
-                <li><a href="index.php" class="nav-link">Inicio</a></li>
-                <li><a href="Catalogo.php" class="nav-link">Catalogo</a></li>
-                <li><a href="Contact.php" class="nav-link">Contacto</a></li>
-                <li><a href="Perfil.php" class="nav-link">Perfil</a></li>
-                <li><a href="" class="nav-link">Preguntas Frecuentes</a></li>
+                <?php foreach ($menuItems as $item): ?>
+                    <li><a href="<?= $item['href'] ?>" class="nav-link"><?= $item['label'] ?></a></li>
+                <?php endforeach; ?>
             </ul>
         </nav>
     </div>
@@ -50,6 +63,7 @@
         .active {
             border-bottom: 2px solid black;
         }
+
         .lens {
             border-top-right-radius: 15px;
             border-bottom-right-radius: 15px;
@@ -97,7 +111,7 @@
 
         form .btn {
             border-radius: 0 15px 15px 0;
-          
+
             border: none;
         }
 
@@ -123,6 +137,7 @@
             margin-right: 0;
 
         }
+
         .login-container {
             position: absolute;
             top: 20px;

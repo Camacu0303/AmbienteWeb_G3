@@ -1,8 +1,11 @@
 <?php
+$requiredRole = 'usuario';
+require_once "../Utilidades/session_checkout.php";
 include("../Plantillas/nav.php");
 ?>
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -10,18 +13,18 @@ include("../Plantillas/nav.php");
     <title>Perfil</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
 </head>
+
 <body>
     <div class="profile-container">
         <h1 class="text-center mt-4">Perfil del Usuario</h1>
-        
+
         <div class="profile-card mx-auto">
             <div class="profile-image">
                 <img src="../Images/813728.png" alt="Imagen de perfil" class="rounded-circle">
             </div>
             <div class="profile-details">
-                <h2>Nombre del Usuario</h2>
-                <p><strong>Email:</strong> usuario@example.com</p>
-                <p><strong>Miembro desde:</strong> Enero 2023</p>
+                <h2><?php echo isset($_SESSION['nombre']) ? htmlspecialchars($_SESSION['nombre']) : 'Usuario Anónimo'; ?></h2>
+                <p><strong>Email:</strong> <?php echo isset($_SESSION['email']) ? htmlspecialchars($_SESSION['email']) : 'No disponible'; ?></p>
             </div>
         </div>
     </div>
@@ -59,4 +62,5 @@ include("../Plantillas/nav.php");
         }
     </style>
 </body>
+
 </html>
