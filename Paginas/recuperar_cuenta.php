@@ -128,12 +128,10 @@
         <div class="recovery-form-container">
             <h2>Recupera tu cuenta</h2>
             <p class="recovery-instructions">Introduce tu correo electrónico para enviarte un email con una contraseña temporal</p>
-
             <form action="recuperar_contraseña.php" method="post" class="recovery-form">
                 <input type="email" id="email" name="email" required placeholder="Correo electrónico">
                 <button type="submit" class="recovery-button">Enviar</button>
             </form>
-
             <p class="register-text">¿No es un usuario activo? <a href="registro.php">Registrarse</a></p>
         </div>
     </div>

@@ -1,5 +1,5 @@
 <?php
-$requiredRole = 'admin'; 
+$requiredRole = 'usuario'; 
 require_once "../Utilidades/session_checkout.php";
 include("../Plantillas/nav.php");
 ?>

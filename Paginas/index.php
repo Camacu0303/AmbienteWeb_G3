@@ -54,17 +54,15 @@ include("../Plantillas/nav.php");
     </style>
 </head>
 <body>
-
     <section id="seccion1">
         <h2>Bienvenidos a MiLibro.com</h2>
-        <p>En nuestra librer�a, encontrar�s una amplia selecci�n de libros de todos los g�neros, desde literatura cl�sica hasta las �ltimas novedades en ciencia ficci�n. Nos especializamos en brindarte experiencias literarias �nicas.</p>
+        <p>En nuestra librería, encontrarás una amplia selección de libros de todos los g�neros, desde literatura cl�sica hasta las �ltimas novedades en ciencia ficci�n. Nos especializamos en brindarte experiencias literarias �nicas.</p>
     </section>
-
     <section id="seccion2">
         <h2>Cat�logo de Libros</h2>
         <div class="content">
             <div>
-                <h3>Ficci�n</h3>
+                <h3>Ficción</h3>
                 <ul>
                     <li>El Gran Gatsby - F. Scott Fitzgerald</li>
                     <li>1984 - George Orwell</li>
@@ -113,6 +111,5 @@ include("../Plantillas/nav.php");
     <footer>
         <p>&copy; 2024 "MiLibro.com". Todos los derechos reservados.</p>
     </footer>
-
 </body>
 </html>

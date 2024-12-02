@@ -30,14 +30,15 @@
         }
         $menuItems = [
             ['href' => 'index.php', 'label' => 'Inicio'],
-            ['href' => 'Catalogo.php', 'label' => 'Catálogo'],
+            ['href' => 'Comunidad.php', 'label' => 'Comunidad'],
+            ['href' => 'Catalogo.php', 'label' => 'Libros y documentos'],
             ['href' => 'Contact.php', 'label' => 'Contacto'],
             ['href' => 'Perfil.php', 'label' => 'Perfil'],
             ['href' => '', 'label' => 'Preguntas Frecuentes']
         ];
         // Agregar "Gestionar Usuarios" si es administrador
         if (isset($_SESSION['privilegio']) && $_SESSION['privilegio'] === 'admin') {
-            $menuItems[] = ['href' => 'GestionarUsuarios.php', 'label' => 'Gestionar Usuarios'];
+            $menuItems[] = ['href' => 'Administracion.php', 'label' => 'Administración'];
         }
         ?>
         <nav>
@@ -73,7 +74,7 @@
         .navImage {
             height: 300px;
             width: 100%;
-            background-image: url("../Images/image.svg");
+            background-image: url("../Images/Libros.jpg");
             background-repeat: no-repeat;
             background-size: cover;
             background-position: center;
@@ -89,7 +90,7 @@
         .navContainer {
             height: 30%;
             width: 100%;
-            background-color: #B79188;
+            background-color: #605bab;
         }
 
         form {
@@ -111,7 +112,6 @@
 
         form .btn {
             border-radius: 0 15px 15px 0;
-
             border: none;
         }
 
@@ -127,6 +127,7 @@
 
         nav ul li {
             margin-right: 50px;
+            color: white;
         }
 
         button {
