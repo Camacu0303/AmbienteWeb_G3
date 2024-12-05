@@ -1,67 +1,53 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Detalle del Libro</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet">
-</head>
-<body>
-    <div class="navContainer">
-        <!-- Aquí va la barra de navegación existente -->
-    </div>
-    
-    <div class="container mt-5">
-        <!-- Imagen adicional en la parte superior -->
-        <div class="top-image mb-4">
-            <img src="../Images/image.svg" alt="Imagen principal" class="img-fluid" style="width: 100%; border-radius: 8px;">
-        </div>
-        
-        <div class="row">
-            <!-- Imagen del libro -->
-            <div class="col-md-4">
-                <div class="book-image">
-                    <img src="../Images/SINFOTO.jpg" alt="Imagen del libro" class="img-fluid" style="border-radius: 8px;">
-                </div>
-            </div>
-            <!-- Información del libro -->
-            <div class="col-md-8">
-                <h2>Nombre del Libro</h2>
-                <p><strong>Descripción:</strong> Breve descripción sobre el libro. Este espacio mostrará una sinopsis o resumen una vez se tenga la información disponible.</p>
-                <p><strong>Cantidad de Páginas:</strong> Paginas totales del libro</p>
-                <p><strong>Género:</strong> Genero del libro (Historia, Comedia...)</p>
-            </div>
-        </div>
-    </div>
+<?php
+// Conexión a la base de datos
+require_once "../Utilidades/Conn.php";
+session_start();
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
-    <style>
-        body {
-            background-color: #f8f9fa;
-            margin: 0;
-            padding: 0;
-            width: 100%;
-            height: 100%;
+// Verifica que el formulario haya sido enviado
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $titulo = $_POST['titulo'];
+    $autor = $_POST['autor'];
+    $id_categoria = $_POST['id_categoria'];
+    $id_estado = $_POST['id_estado'];
+    $descripcion = $_POST['descripcion'];
+    $id_usuario = isset($_SESSION['id_usuario']) ? $_SESSION['id_usuario'] : 1;
+
+    // Manejo del archivo subido
+    if (isset($_FILES['archivo']) && $_FILES['archivo']['error'] === UPLOAD_ERR_OK) {
+        $archivoNombre = $_FILES['archivo']['name'];
+        $archivoTmp = $_FILES['archivo']['tmp_name'];
+        $archivoDestino = "../uploads/" . basename($archivoNombre);
+
+        // Mover el archivo a la carpeta de destino
+        if (move_uploaded_file($archivoTmp, $archivoDestino)) {
+            $db = new Database();
+            $conn = $db->getConnection();
+
+            $sql = "INSERT INTO libro (titulo, autor, id_categoria, id_estado, descripcion, id_usuario, archivo) 
+                    VALUES (?, ?, ?, ?, ?, ?, ?)";
+            $stmt = $conn->prepare($sql);
+            $archivoNombreGuardado = basename($archivoNombre);
+            $stmt->bind_param("ssissis", $titulo, $autor, $id_categoria, $id_estado, $descripcion, $id_usuario, $archivoNombreGuardado);
+
+            if ($stmt->execute()) {
+                
+                // Almacenar un mensaje de éxito en la sesión
+                $_SESSION['mensaje'] = "Documento subido correctamente.";
+                header("Location: Perfil.php");
+                exit;
+            } else {
+                echo "Error al guardar el libro: " . $stmt->error;
+            }
+
+            $stmt->close();
+            $conn->close();
+        } else {
+            echo "Error al subir el archivo. Verifica los permisos.";
         }
-        
-        .container {
-            background-color: white;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
-        }
-        
-        .navContainer {
-            height: 30%;
-            width: 100%;
-            background-color: #B79188;
-        }
-        
-        .book-image img {
-            max-width: 100%;
-            height: auto;
-            display: block;
-        }
-    </style>
-</body>
-</html>
+    } else {
+        echo "No se seleccionó archivo o hubo un error.";
+    }
+} else {
+    echo "Método de solicitud no válido.";
+}
+?>

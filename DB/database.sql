@@ -127,7 +127,8 @@ CREATE TABLE `libro` (
   `id_categoria` int(11) DEFAULT NULL,
   `id_estado` int(11) DEFAULT NULL,
   `descripcion` varchar(1024) DEFAULT NULL,
-  `id_usuario` int(11) DEFAULT NULL
+  `id_usuario` int(11) DEFAULT NULL,
+  `archivo` varchar(255) DEFAULT NULL 
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -163,22 +164,27 @@ INSERT INTO `token_seguridad` (`id`, `user_email`, `token`, `expires_at`, `creat
 --
 
 CREATE TABLE `usuario` (
-  `id_usuario` int(11) NOT NULL,
-  `nombre` varchar(100) NOT NULL,
-  `email` varchar(100) NOT NULL,
-  `usuario` varchar(20) NOT NULL,
-  `pass` varchar(255) NOT NULL,
-  `privilegio` varchar(50) NOT NULL,
-  `fecha_registro` date DEFAULT curdate()
+  `id_usuario` INT(11) NOT NULL AUTO_INCREMENT,
+  `nombre` VARCHAR(100) NOT NULL,
+  `email` VARCHAR(100) NOT NULL,
+  `usuario` VARCHAR(20) NOT NULL,
+  `pass` VARCHAR(255) NOT NULL,
+  `privilegio` VARCHAR(50) NOT NULL,
+  `fecha_registro` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id_usuario`),
+  UNIQUE KEY `email` (`email`),
+  UNIQUE KEY `usuario` (`usuario`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
 --
 -- Volcado de datos para la tabla `usuario`
 --
 
-INSERT INTO `usuario` (`id_usuario`, `nombre`, `email`, `usuario`, `pass`, `privilegio`, `fecha_registro`) VALUES
-(2, 'Josue Campos Acuña', 'coder.josue@gmail.com', 'camacu0303', '$2y$10$uBMhE6wAFD8XQX/G8sLd9.MpxTUhOE0/zLhKftDQiiW.RbtObni6q', 'usuario', '2024-11-28'),
-(3, 'Admin User', 'coder.pruebas.josue@gmail.com', 'admin', '$2y$10$/CShpOgjA7w5zMX8CkJgWuY1GvcxMX1Lwm1C53m0La4/VIpqB2XDC', 'admin', '2024-11-28');
+INSERT INTO `usuario` (`id_usuario`,`nombre`, `email`, `usuario`, `pass`, `privilegio`) VALUES
+(2, 'Josue Campos Acuña', 'coder.josue@gmail.com', 'camacu0303', '$2y$10$uBMhE6wAFD8XQX/G8sLd9.MpxTUhOE0/zLhKftDQiiW.RbtObni6q', 'usuario'),
+(3, 'Admin User', 'coder.pruebas.josue@gmail.com', 'admin', '$2y$10$/CShpOgjA7w5zMX8CkJgWuY1GvcxMX1Lwm1C53m0La4/VIpqB2XDC', 'admin');
+
+
+
 
 -- --------------------------------------------------------
 
@@ -242,14 +248,6 @@ ALTER TABLE `libro`
 ALTER TABLE `token_seguridad`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `token` (`token`);
-
---
--- Indices de la tabla `usuario`
---
-ALTER TABLE `usuario`
-  ADD PRIMARY KEY (`id_usuario`),
-  ADD UNIQUE KEY `email` (`email`),
-  ADD UNIQUE KEY `usuario` (`usuario`);
 
 --
 -- Indices de la tabla `valoracion`

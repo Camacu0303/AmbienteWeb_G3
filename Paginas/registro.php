@@ -11,9 +11,13 @@ function registerUser($conn, $nombre, $email, $usuario, $password)
     $stmt = $conn->prepare($sql);
     $privilegio = 'usuario'; 
     $stmt->bind_param("sssss", $nombre, $email, $usuario, $hashedPassword, $privilegio);
+    
     if ($stmt->execute()) {
+        // Redirigir al usuario a una página de éxito
+        header("Location: index.php"); 
         exit();
     } else {
+        echo "Error al registrar el usuario: " . $stmt->error;
         exit();
     }
 }
