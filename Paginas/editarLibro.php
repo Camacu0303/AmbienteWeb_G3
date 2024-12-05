@@ -164,7 +164,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <?php endif; ?>
 
             <!-- Subir Nuevo Archivo -->
-            <label for="archivo" class="form-label">Subir un nuevo archivo (opcional):</label>
+            <label for="archivo" class="form-label">Subir un nuevo archivo:</label>
             <input type="file" id="archivo" name="archivo" accept=".pdf,.doc,.docx" class="form-control">
 
             <!-- Botones -->
