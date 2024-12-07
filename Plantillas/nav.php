@@ -23,10 +23,10 @@
         </form>
         <div class="login-container">
             <a href="login.php" class="login-button">Iniciar Sesión</a>
-        </div>    
+        </div>
         <?php
         if (session_status() === PHP_SESSION_NONE) {
-            session_start(); 
+            session_start();
         }
         $menuItems = [
             ['href' => 'index.php', 'label' => 'Inicio'],
@@ -147,7 +147,7 @@
 
         .login-button {
             padding: 8px 12px;
-            background-color: #8B4513;
+            background-color: #605BAB;
             color: #fff;
             text-decoration: none;
             border-radius: 4px;
@@ -155,7 +155,11 @@
         }
 
         .login-button:hover {
-            background-color: #A0522D;
+            background-color: #7e7ba8;
+        }
+
+        .nav-link:hover {
+            background-color: #7e7ba8;
         }
     </style>
 </body>
