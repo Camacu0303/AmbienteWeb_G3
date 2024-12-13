@@ -20,32 +20,64 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         // Mover el archivo a la carpeta de destino
         if (move_uploaded_file($archivoTmp, $archivoDestino)) {
+
+
             $db = new Database();
             $conn = $db->getConnection();
 
-            $sql = "INSERT INTO libro (titulo, autor, id_categoria, id_estado, descripcion, id_usuario, archivo) 
-                    VALUES (?, ?, ?, ?, ?, ?, ?)";
-            $stmt = $conn->prepare($sql);
-            $archivoNombreGuardado = basename($archivoNombre);
-            $stmt->bind_param("ssissis", $titulo, $autor, $id_categoria, $id_estado, $descripcion, $id_usuario, $archivoNombreGuardado);
+            // Manejo de la imagen subida (obligatoria)
+            if (isset($_FILES['imagen']) && $_FILES['imagen']['error'] === UPLOAD_ERR_OK) {
+                $imagenNombre = basename($_FILES['imagen']['name']);
+                $imagenTmp = $_FILES['imagen']['tmp_name'];
+                $imagenDestino = "../uploadsLib/" . $imagenNombre;
 
-            if ($stmt->execute()) {
-                
-                // Almacenar un mensaje de éxito en la sesión
-                $_SESSION['mensaje'] = "Documento subido correctamente.";
-                header("Location: Perfil.php");
-                exit;
+                // Validar tipo de archivo para la imagen
+                $fileType = pathinfo($imagenDestino, PATHINFO_EXTENSION);
+                $allowedTypes = ['jpg', 'jpeg', 'png', 'gif'];
+
+                if (in_array(strtolower($fileType), $allowedTypes)) {
+                    if (move_uploaded_file($imagenTmp, $imagenDestino)) {
+                        // Guardar datos en la base de datos
+                        $sql = "INSERT INTO libro (titulo, autor, id_categoria, id_estado, descripcion, id_usuario, archivo, imagen) 
+                                VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+                        $stmt = $conn->prepare($sql);
+                        $stmt->bind_param(
+                            "ssississ",
+                            $titulo,
+                            $autor,
+                            $id_categoria,
+                            $id_estado,
+                            $descripcion,
+                            $id_usuario,
+                            $archivoNombre,
+                            $imagenNombre
+                        );
+
+                        if ($stmt->execute()) {
+                            // Mensaje de éxito
+                            $_SESSION['mensaje'] = "Documento subido correctamente.";
+                            header("Location: Perfil.php");
+                            exit;
+                        } else {
+                            echo "Error al guardar el libro: " . $stmt->error;
+                        }
+
+                        $stmt->close();
+                        $conn->close();
+                    } else {
+                        echo "Error al subir la imagen. Verifica los permisos.";
+                    }
+                } else {
+                    echo "Formato de imagen no válido.";
+                }
             } else {
-                echo "Error al guardar el libro: " . $stmt->error;
+                echo "La imagen es obligatoria.";
             }
-
-            $stmt->close();
-            $conn->close();
         } else {
             echo "Error al subir el archivo. Verifica los permisos.";
         }
     } else {
-        echo "No se seleccionó archivo o hubo un error.";
+        echo "El archivo es obligatorio.";
     }
 } else {
     echo "Método de solicitud no válido.";

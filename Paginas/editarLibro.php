@@ -37,7 +37,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $id_estado = $_POST['id_estado'];
     $descripcion = $_POST['descripcion'];
 
-    $archivoNombre = $libro['archivo']; // Mantener el archivo actual por defecto
+    $archivoNombre = $libro['archivo'];
     if (isset($_FILES['archivo']) && $_FILES['archivo']['error'] === UPLOAD_ERR_OK) {
         $archivoNombre = $_FILES['archivo']['name'];
         $archivoTmp = $_FILES['archivo']['tmp_name'];
@@ -54,11 +54,27 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             exit;
         }
     }
+    // Manejo de la imagen
+    $imagenNombre = $libro['imagen'];
+    if (isset($_FILES['imagen']) && $_FILES['imagen']['error'] === UPLOAD_ERR_OK) {
+        $imagenNombre = $_FILES['imagen']['name'];
+        $imagenTmp = $_FILES['imagen']['tmp_name'];
+        $imagenDestino = "../uploadsLib/" . basename($imagenNombre);
+
+        if (move_uploaded_file($imagenTmp, $imagenDestino)) {
+            // Eliminar la imagen anterior si existe
+            if (!empty($libro['imagen']) && file_exists("../uploadsLib/" . $libro['imagen'])) {
+                unlink("../uploadsLib/" . $libro['imagen']);
+            }
+        } else {
+            echo "Error al subir la imagen.";
+        }
+    }
 
     // Actualizar el registro del libro
-    $sql = "UPDATE libro SET titulo = ?, autor = ?, id_categoria = ?, id_estado = ?, descripcion = ?, archivo = ? WHERE id_libro = ?";
+    $sql = "UPDATE libro SET titulo = ?, autor = ?, id_categoria = ?, id_estado = ?, descripcion = ?, archivo = ?, imagen = ? WHERE id_libro = ?";
     $stmt = $conn->prepare($sql);
-    $stmt->bind_param("ssisssi", $titulo, $autor, $id_categoria, $id_estado, $descripcion, $archivoNombre, $id_libro);
+    $stmt->bind_param("ssissssi", $titulo, $autor, $id_categoria, $id_estado, $descripcion, $archivoNombre, $imagenNombre, $id_libro);
 
     if ($stmt->execute()) {
         $_SESSION['mensaje'] = "Libro actualizado correctamente.";
@@ -166,6 +182,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <!-- Subir Nuevo Archivo -->
             <label for="archivo" class="form-label">Subir un nuevo archivo:</label>
             <input type="file" id="archivo" name="archivo" accept=".pdf,.doc,.docx" class="form-control">
+
+            <!-- Imagen Actual -->
+            <label for="imagen" class="form-label">Imagen actual:</label>
+            <?php if (!empty($libro['imagen'])): ?>
+                <div>
+                    <a href="../uploadsLib/<?php echo htmlspecialchars($libro['imagen']); ?>" t alt="Imagen del libro"
+                        style="max-width: 200px; max-height: 200px;">
+                    </a>
+                </div>
+            <?php else: ?>
+                <p>No hay imagen cargada.</p>
+            <?php endif; ?>
+
+            <!-- Subir Nueva Imagen -->
+            <label for="imagen" class="form-label">Subir una nueva imagen(Opcional):</label>
+            <input type="file" id="imagen" name="imagen" accept="image/*" class="form-control">
 
             <!-- Botones -->
             <div class="button-container mt-3">
