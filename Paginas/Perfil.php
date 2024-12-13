@@ -352,7 +352,7 @@ if ($id_usuario) {
                         style="padding: 10px; border: 1px solid #ccc; border-radius: 4px;" required>
 
                     <!-- Imagen -->
-                    <label for="imagen" style="font-weight: bold;">Imagen del libro (opcional):</label>
+                    <label for="imagen" style="font-weight: bold;">Imagen del libro:</label>
                     <input type="file" id="imagen" name="imagen" accept="image/*" class="form-control"
                         style="padding: 10px; border: 1px solid #ccc; border-radius: 4px;" required>
 

@@ -187,8 +187,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <label for="imagen" class="form-label">Imagen actual:</label>
             <?php if (!empty($libro['imagen'])): ?>
                 <div>
-                    <a href="../uploadsLib/<?php echo htmlspecialchars($libro['imagen']); ?>" t alt="Imagen del libro"
-                        style="max-width: 200px; max-height: 200px;">
+                    <a href="../uploadsLib/<?php echo htmlspecialchars($libro['imagen']); ?>" target="_blank">
+                        <?php echo htmlspecialchars($libro['imagen']); ?>
                     </a>
                 </div>
             <?php else: ?>
@@ -196,7 +196,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <?php endif; ?>
 
             <!-- Subir Nueva Imagen -->
-            <label for="imagen" class="form-label">Subir una nueva imagen(Opcional):</label>
+            <label for="imagen" class="form-label">Subir una nueva imagen:</label>
             <input type="file" id="imagen" name="imagen" accept="image/*" class="form-control">
 
             <!-- Botones -->
