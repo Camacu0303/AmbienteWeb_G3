@@ -12,10 +12,10 @@
 <body>
     <div class="navImage"></div>
     <div class="navContainer">
-        <form target="#">
+    <form action="Catalogo.php" method="GET">
             <div class="input-group">
-                <input type="text" class="form-control"
-                    placeholder="Ingrese un parámetro de búsqueda... Don Quijote de la Mancha">
+                <input type="text" class="form-control" name="busqueda"
+                    placeholder="Buscar libros por título, autor o categoría">
                 <button class="lens" type="submit">
                     <i class="bi bi-search"></i>
                 </button>
