@@ -12,7 +12,7 @@
 <body>
     <div class="navImage"></div>
     <div class="navContainer">
-    <form action="Catalogo.php" method="GET">
+        <form action="Catalogo.php" method="GET">
             <div class="input-group">
                 <input type="text" class="form-control" name="busqueda"
                     placeholder="Buscar libros por título, autor o categoría">
@@ -22,8 +22,18 @@
             </div>
         </form>
         <div class="login-container">
-            <a href="login.php" class="login-button">Iniciar Sesión</a>
+            <?php
+            if (session_status() === PHP_SESSION_NONE) {
+                session_start();
+            }
+            if (!isset($_SESSION['privilegio'])) {
+                echo '<a href="login.php" class="login-button">Iniciar Sesión</a>';
+            } else {
+                echo '<a href="../Utilidades/ClearSessionVars.php" class="login-button">Cerrar Sesión</a>';
+            }
+            ?>
         </div>
+
         <?php
         if (session_status() === PHP_SESSION_NONE) {
             session_start();
