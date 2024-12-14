@@ -170,14 +170,14 @@ if (!isset($_SESSION['privilegio'])) {
                 return;
             }
 
-            fetch('../ScriptsDB/agregar_publicacion.php', {
+            fetch('../ScriptsDB/crear_publicaciones.php', { // Asegúrate de que la ruta sea correcta
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
                     },
                     body: JSON.stringify({
                         titulo: titulo,
-                        contenido: contenido,
+                        contenido: contenido
                     }),
                 })
                 .then(response => response.json())
@@ -186,16 +186,17 @@ if (!isset($_SESSION['privilegio'])) {
                         alert(data.error);
                         return;
                     }
-                    // Opcional: Actualizar la lista de publicaciones aquí
-                    $('#miModal').modal('hide'); // Cerrar el modal
-                    document.getElementById('formAgregar').reset(); // Reiniciar el formulario
-                    // Llamar a la función para cargar las publicaciones nuevamente
-                    cargarPublicaciones();
+                    alert(data.message); // Mensaje de éxito
+                    document.getElementById('formAgregar').reset();
+                    cargarPublicaciones(); // Actualiza la lista de publicaciones
+                    const modal = bootstrap.Modal.getInstance(document.getElementById('miModal'));
+                    modal.hide(); // Cierra el modal
                 })
                 .catch(error => {
                     console.error('Error al agregar publicación:', error);
                 });
         }
+
 
 
         function cargarPublicaciones() {
@@ -333,29 +334,27 @@ if (!isset($_SESSION['privilegio'])) {
             <span style="margin-right: 5px;">+</span> Agregar
         </button>
     <?php endif; ?>
-    <div class="modal fade" id="miModal" tabindex="-1" role="dialog" aria-labelledby="miModalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
+    <div class="modal fade" id="miModal" tabindex="-1" aria-labelledby="miModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="miModalLabel">Agregar Publicación</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
                     <form id="formAgregar">
-                        <div class="form-group">
-                            <label for="titulo">Título</label>
+                        <div class="mb-3">
+                            <label for="titulo" class="form-label">Título</label>
                             <input type="text" class="form-control" id="titulo" required>
                         </div>
-                        <div class="form-group">
-                            <label for="contenido">Contenido</label>
+                        <div class="mb-3">
+                            <label for="contenido" class="form-label">Contenido</label>
                             <textarea class="form-control" id="contenido" rows="3" required></textarea>
                         </div>
                     </form>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
                     <button type="button" class="btn btn-primary" onclick="agregarPublicacion()">Agregar</button>
                 </div>
             </div>
