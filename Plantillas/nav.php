@@ -44,7 +44,7 @@
             ['href' => 'Catalogo.php', 'label' => 'Libros y documentos'],
             ['href' => 'Contact.php', 'label' => 'Contacto'],
             ['href' => 'Perfil.php', 'label' => 'Perfil'],
-            ['href' => '', 'label' => 'Preguntas Frecuentes']
+            ['href' => 'QA.php', 'label' => 'Preguntas Frecuentes']
         ];
         // Agregar "Gestionar Usuarios" si es administrador
         if (isset($_SESSION['privilegio']) && $_SESSION['privilegio'] === 'admin') {
