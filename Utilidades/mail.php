@@ -17,12 +17,12 @@ function enviarCorreo($mensaje, $usuarioEmail, $titulo)
         $mail->Password = "junndiavjthhhucv"; //Contrase�a, se setea por privado, NO SE SUBE...!!!!
         $mail->SMTPSecure = "tls";
         $mail->Port = 587;
-
+        $mail->CharSet = 'UTF-8';
         // Configuraci�n del correo
         $mail->setFrom("coder.pruebas.josue@gmail.com", "Milibro.com");
         $mail->addAddress($usuarioEmail);
         $mail->isHTML(true);
-        $mail->Subject = "Notificaci�n";
+        $mail->Subject = $titulo;
 
         // Plantilla de HTML para el mensaje
         $htmlTemplate = "
@@ -39,9 +39,8 @@ function enviarCorreo($mensaje, $usuarioEmail, $titulo)
         $mail->Body = $htmlTemplate;
         $mail->AltBody = strip_tags($mensaje);
         $mail->send();
-        echo "El mensaje se ha enviado correctamente.";
     } catch (Exception $e) {
-        echo "Error al enviar el correo: {$mail->ErrorInfo}";
+       exit();
     }
     
 }

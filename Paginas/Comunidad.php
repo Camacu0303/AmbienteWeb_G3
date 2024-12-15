@@ -339,27 +339,32 @@ if (!isset($_SESSION['privilegio'])) {
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="miModalLabel">Agregar Publicación</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <button type="button" class="btn-close" data-dismiss="modal" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <form id="formAgregar">
-                        <div class="mb-3">
+                    <form id="formAgregar" class="row g-3">
+                        <!-- Campo Título -->
+                        <div class="col-12">
                             <label for="titulo" class="form-label">Título</label>
-                            <input type="text" class="form-control" id="titulo" required>
+                            <input type="text" class="form-control border border-secondary" id="titulo" placeholder="Escribe un título..." required>
                         </div>
-                        <div class="mb-3">
+                        <!-- Campo Contenido -->
+                        <div class="col-12">
                             <label for="contenido" class="form-label">Contenido</label>
-                            <textarea class="form-control" id="contenido" rows="3" required></textarea>
+                            <textarea class="form-control border border-secondary" id="contenido" rows="3" placeholder="Escribe el contenido aquí..." required></textarea>
                         </div>
                     </form>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                    <button type="button" class="btn btn-primary" onclick="agregarPublicacion()">Agregar</button>
+                    <div class="col-12 d-flex justify-content-end">
+                        <button type="button" class="btn btn-primary" onclick="agregarPublicacion()">Agregar</button>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
+
+
 
 </body>
 

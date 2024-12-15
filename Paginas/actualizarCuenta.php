@@ -15,7 +15,6 @@ $conn = $db->getConnection();
 
 // Validar datos recibidos del formulario
 $nombre = isset($_POST['nombre']) ? trim($_POST['nombre']) : "";
-$email = isset($_POST['email']) ? trim($_POST['email']) : "";
 $telefono = isset($_POST['telefono']) ? trim($_POST['telefono']) : "";
 $direccion = isset($_POST['direccion']) ? trim($_POST['direccion']) : "";
 $idioma_preferido = isset($_POST['idioma_preferido']) ? implode(',', $_POST['idioma_preferido']) : "";
@@ -48,7 +47,7 @@ if (isset($_FILES['foto_perfil']) && $_FILES['foto_perfil']['error'] === UPLOAD_
 }
 
 // Construir la consulta de actualización
-$sql = "UPDATE usuario SET nombre = ?, email = ?, telefono = ?, direccion = ?, idioma_preferido = ?, intereses = ?";
+$sql = "UPDATE usuario SET nombre = ?, telefono = ?, direccion = ?, idioma_preferido = ?, intereses = ?";
 
 if ($foto_perfil) {
     $sql .= ", foto_perfil = ?";
@@ -59,9 +58,9 @@ $sql .= " WHERE id_usuario = ?";
 $stmt = $conn->prepare($sql);
 
 if ($foto_perfil) {
-    $stmt->bind_param("sssssssi", $nombre, $email, $telefono, $direccion, $idioma_preferido, $intereses, $foto_perfil, $id_usuario);
+    $stmt->bind_param("ssssssi", $nombre, $telefono, $direccion, $idioma_preferido, $intereses, $foto_perfil, $id_usuario);
 } else {
-    $stmt->bind_param("ssssssi", $nombre, $email, $telefono, $direccion, $idioma_preferido, $intereses, $id_usuario);
+    $stmt->bind_param("sssssi", $nombre, $telefono, $direccion, $idioma_preferido, $intereses, $id_usuario);
 }
 
 // Ejecutar la consulta
@@ -69,7 +68,6 @@ if ($stmt->execute()) {
     $_SESSION['mensaje'] = "Perfil actualizado con éxito.";
     // Actualizar la sesión si es necesario
     $_SESSION['nombre'] = $nombre;
-    $_SESSION['email'] = $email;
     $_SESSION['idioma_preferido'] = $idioma_preferido;
     $_SESSION['intereses'] = $intereses;
     if ($foto_perfil) {

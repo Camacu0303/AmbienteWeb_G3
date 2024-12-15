@@ -1,8 +1,46 @@
 <?php
 require_once '../Utilidades/Conn.php';
+require_once "../Utilidades/mail.php";
 $db = new Database();
 $conn = $db->getConnection();
 session_start();
+function notificar($usuario, $correoUsuario)
+{
+    $ip = $_SERVER['REMOTE_ADDR']; // Dirección IP del usuario
+    $fechaHora = date("Y-m-d H:i:s"); // Fecha y hora del inicio de sesión
+
+    $mensaje = "
+    <p>Hola, {$usuario}</p>
+    <p>Se ha iniciado sesión en tu cuenta desde un nuevo dispositivo:</p>
+    <ul>
+        <li><strong>Dirección IP:</strong> {$ip}</li>
+        <li><strong>Fecha y hora:</strong> {$fechaHora}</li>
+    </ul>
+    <p>Si reconoces esta actividad, no es necesario realizar ninguna acción. Si no fuiste tú, por favor cambia tu contraseña de inmediato y contacta con nuestro soporte.</p>
+    <p>Gracias,<br>El equipo de Milibro.com</p>";
+    $titulo = "Notificación de inicio de sesión";
+    enviarCorreo($mensaje, $correoUsuario, $titulo);
+}
+function notificarIntentoFallido($usuario, $correoUsuario)
+{
+    $ip = $_SERVER['REMOTE_ADDR']; // Dirección IP del intento
+    $fechaHora = date("Y-m-d H:i:s"); // Fecha y hora del intento
+
+    $mensaje = "
+    <p>Hola, {$usuario}</p>
+    <p>Hemos detectado un intento fallido de inicio de sesión en tu cuenta:</p>
+    <ul>
+        <li><strong>Dirección IP:</strong> {$ip}</li>
+        <li><strong>Fecha y hora:</strong> {$fechaHora}</li>
+    </ul>
+    <p>Si no fuiste tú, te recomendamos cambiar tu contraseña de inmediato y revisar la seguridad de tu cuenta.</p>
+    <p>Si este intento fue tuyo y olvidaste tu contraseña, puedes restablecerla desde la página de recuperación.</p>
+    <p>Gracias,<br>El equipo de Milibro.com</p>";
+
+    $titulo = "Intento fallido de inicio de sesión";
+    enviarCorreo($mensaje, $correoUsuario, $titulo);
+}
+
 function loginUser($conn, $usuario, $enteredPassword)
 {
     $sql = "SELECT id_usuario, nombre, email, pass, privilegio FROM usuario WHERE usuario = ?";
@@ -21,7 +59,6 @@ function loginUser($conn, $usuario, $enteredPassword)
         $email = $row['email'];
         $storedHash = $row['pass'];
         $privilegio = $row['privilegio'];
-
         // Verificar la contraseña ingresada contra el hash
         if (password_verify($enteredPassword, $storedHash)) {
             // Almacenar datos del usuario en la sesión, excepto la contraseña
@@ -31,9 +68,12 @@ function loginUser($conn, $usuario, $enteredPassword)
             $_SESSION['usuario'] = $usuario;
             $_SESSION['privilegio'] = $privilegio;
 
+            notificar($nombre, $email);
             header("Location: index.php");
             exit();
-        } 
+        }else{
+            notificarIntentoFallido($nombre, $email);
+        }
     }
 }
 if (isset($_POST['login'])) {
@@ -45,6 +85,7 @@ $db->close();
 ?>
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">

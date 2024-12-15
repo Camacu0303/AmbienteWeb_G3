@@ -24,9 +24,7 @@ include("../Plantillas/nav.php");
             width: 100%;
             background-color: #f4f4f4;
             display: table;
-            
             text-align: center;
-            
         }
 
         .tab-container {
@@ -38,11 +36,8 @@ include("../Plantillas/nav.php");
             overflow: hidden;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
             margin: auto;
-            
             display: inline-block;
-            
             text-align: left;
-            
         }
 
         .tab-list {
@@ -84,6 +79,10 @@ include("../Plantillas/nav.php");
         .tab-panel.active {
             display: block;
         }
+
+        .form-control {
+            margin-bottom: 10px;
+        }
     </style>
 </head>
 
@@ -107,7 +106,7 @@ include("../Plantillas/nav.php");
                                 <th>Email</th>
                                 <th>Usuario</th>
                                 <th>Privilegio</th>
-                                <th>Acciones</th> <!-- New column for actions -->
+                                <th>Acciones</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -121,7 +120,7 @@ include("../Plantillas/nav.php");
                                 "ajax": {
                                     "url": "../ScriptsDB/get_users.php",
                                     "type": "POST",
-                                    "dataSrc": "" // Use empty string to directly map to the response
+                                    "dataSrc": ""
                                 },
                                 "columns": [{
                                         "data": "id_usuario"
@@ -142,11 +141,11 @@ include("../Plantillas/nav.php");
                                         "data": null,
                                         "render": function(data, type, row) {
                                             return `
-                        <a href="edit_user.php?id=${row.id_usuario}" class="edit-link"><i class="fas fa-edit"></i> Editar</a>
-                        <a href="#" class="delete-link" data-id="${row.id_usuario}"><i class="fas fa-trash-alt"></i> Eliminar</a>
-                    `;
+                                                <a href="edit_user.php?id=${row.id_usuario}" class="edit-link"><i class="fas fa-edit"></i> Editar</a>
+                                                <a href="#" class="delete-link" data-id="${row.id_usuario}"><i class="fas fa-trash-alt"></i> Eliminar</a>
+                                            `;
                                         }
-                                    } // Render action links
+                                    }
                                 ],
                                 "paging": true,
                                 "searching": true,
@@ -154,12 +153,10 @@ include("../Plantillas/nav.php");
                                 "pageLength": 10
                             });
 
-                            // Event listener for delete links
                             $('#usuariosTable tbody').on('click', '.delete-link', function(e) {
-                                e.preventDefault(); // Prevent default link behavior
+                                e.preventDefault();
                                 var userId = $(this).data('id');
                                 if (confirm("¿Estás seguro de que deseas eliminar este usuario?")) {
-                                    // Call delete function (e.g., via AJAX)
                                     $.ajax({
                                         url: '../ScriptsDB/delete_user.php',
                                         type: 'POST',
@@ -167,7 +164,6 @@ include("../Plantillas/nav.php");
                                             id: userId
                                         },
                                         success: function(response) {
-                                            // Reload DataTable or handle response
                                             $('#usuariosTable').DataTable().ajax.reload();
                                         },
                                         error: function() {
@@ -180,16 +176,111 @@ include("../Plantillas/nav.php");
                     </script>
                 </div>
             </div>
+
             <div id="tab2" class="tab-panel">
                 <h2>Gestión de Libros y Documentos</h2>
                 <p>En construcción</p>
             </div>
+
             <div id="tab3" class="tab-panel">
                 <h2>Gestión de categorías</h2>
-                <p>En construcción...</p>
+                <div>
+                    <h3>Añadir Nueva Categoría</h3>
+                    <form id="addCategoryForm">
+                        <input type="text" class="form-control" id="nombre_categoria" name="nombre_categoria" placeholder="Nombre de la categoría" required>
+                        <button type="submit" class="btn btn-primary">Agregar Categoría</button>
+                    </form>
+                    <table id="categoriasTable" class="display">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Nombre</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- DataTables will populate this -->
+                        </tbody>
+                    </table>
+                    <script>
+                        $(document).ready(function() {
+                            // Initialize categories DataTable
+                            const categoriasTable = $('#categoriasTable').DataTable({
+                                "processing": true,
+                                "ajax": {
+                                    "url": "../ScriptsDB/get_categories.php",
+                                    "type": "POST",
+                                    "dataSrc": ""
+                                },
+                                "columns": [{
+                                        "data": "id_categoria"
+                                    },
+                                    {
+                                        "data": "nombre"
+                                    },
+                                    {
+                                        "data": null,
+                                        "render": function(data, type, row) {
+                                            return `
+                                                <a href="edit_category.php?id=${row.id_categoria}" class="edit-link"><i class="fas fa-edit"></i> Editar</a>
+                                                <a href="#" class="delete-link" data-id="${row.id_categoria}"><i class="fas fa-trash-alt"></i> Borrar</a>
+                                            `;
+                                        }
+                                    }
+                                ],
+                                "paging": true,
+                                "searching": true,
+                                "lengthChange": true,
+                                "pageLength": 10
+                            });
+
+                            // Add category form submission
+                            $('#addCategoryForm').on('submit', function(e) {
+                                e.preventDefault();
+                                const nombreCategoria = $('#nombre_categoria').val();
+                                $.ajax({
+                                    url: '../ScriptsDB/add_category.php',
+                                    type: 'POST',
+                                    data: {
+                                        nombre: nombreCategoria
+                                    },
+                                    success: function(response) {
+                                        $('#categoriasTable').DataTable().ajax.reload();
+                                        $('#nombre_categoria').val(''); // Clear input
+                                    },
+                                    error: function() {
+                                        alert("Error al agregar la categoría.");
+                                    }
+                                });
+                            });
+
+                            // Event listener for delete links
+                            $('#categoriasTable tbody').on('click', '.delete-link', function(e) {
+                                e.preventDefault();
+                                var categoryId = $(this).data('id');
+                                if (confirm("¿Estás seguro de que deseas eliminar esta categoría?")) {
+                                    $.ajax({
+                                        url: '../ScriptsDB/delete_category.php',
+                                        type: 'POST',
+                                        data: {
+                                            id: categoryId
+                                        },
+                                        success: function(response) {
+                                            $('#categoriasTable').DataTable().ajax.reload();
+                                        },
+                                        error: function() {
+                                            alert("Error al eliminar la categoría.");
+                                        }
+                                    });
+                                }
+                            });
+                        });
+                    </script>
+                </div>
             </div>
+
             <div id="tab4" class="tab-panel">
-                <h2>Gestión de Categorías</h2>
+                <h2>Estadísticas de uso</h2>
                 <p>En construcción...</p>
             </div>
         </div>

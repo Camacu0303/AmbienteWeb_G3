@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 14-12-2024 a las 03:32:47
+-- Tiempo de generación: 15-12-2024 a las 09:27:11
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -302,8 +302,8 @@ CREATE TABLE `usuario` (
 --
 
 INSERT INTO `usuario` (`id_usuario`, `nombre`, `email`, `usuario`, `pass`, `privilegio`, `fecha_registro`, `foto_perfil`, `telefono`, `direccion`, `idioma_preferido`, `intereses`) VALUES
-(2, 'Josue Campos Acuña', 'coder.josue@gmail.com', 'camacu0303', '$2y$10$.aT/HGoxhKJsPPGmO2dsuu9PyrNz9SlNv.owxCOWofGfiytuU85qS', 'usuario', '2024-12-05 06:54:03', NULL, NULL, NULL, NULL, NULL),
-(3, 'Admin User', 'coder.pruebas.josue@gmail.com', 'admin', '$2y$10$/CShpOgjA7w5zMX8CkJgWuY1GvcxMX1Lwm1C53m0La4/VIpqB2XDC', 'admin', '2024-12-05 06:54:03', NULL, NULL, NULL, NULL, NULL);
+(2, 'Josue Campos Acuña', 'coder.josue@gmail.com', 'camacu0303', '$2y$10$.aT/HGoxhKJsPPGmO2dsuu9PyrNz9SlNv.owxCOWofGfiytuU85qS', 'usuario', '2024-12-05 06:54:03', '1284685.jpg', '', '', 'Español,Inglés,Francés', 'Misterio,Romance'),
+(3, 'Josue Campos Acuña', 'coder.pruebas.josue@gmail.com', 'admin', '$2y$10$/CShpOgjA7w5zMX8CkJgWuY1GvcxMX1Lwm1C53m0La4/VIpqB2XDC', 'admin', '2024-12-05 06:54:03', NULL, '', '', 'Italiano', 'Misterio,Romance');
 
 -- --------------------------------------------------------
 
@@ -427,7 +427,7 @@ ALTER TABLE `blog`
 -- AUTO_INCREMENT de la tabla `categoria`
 --
 ALTER TABLE `categoria`
-  MODIFY `id_categoria` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
+  MODIFY `id_categoria` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
 
 --
 -- AUTO_INCREMENT de la tabla `comentarios_blog`
