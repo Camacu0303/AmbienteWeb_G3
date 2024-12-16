@@ -4,6 +4,7 @@ require_once "../Utilidades/Conn.php";
 session_start();
 $requiredRole = 'usuario';
 require_once "../Utilidades/session_checkout.php";
+
 // Verifica que el formulario haya sido enviado
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $titulo = $_POST['titulo'];
@@ -13,6 +14,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $descripcion = $_POST['descripcion'];
     $id_usuario = isset($_SESSION['id_usuario']) ? $_SESSION['id_usuario'] : 1;
 
+    $errorMensaje = '';
+
     // Manejo del archivo subido
     if (isset($_FILES['archivo']) && $_FILES['archivo']['error'] === UPLOAD_ERR_OK) {
         $archivoNombre = $_FILES['archivo']['name'];
@@ -21,8 +24,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         // Mover el archivo a la carpeta de destino
         if (move_uploaded_file($archivoTmp, $archivoDestino)) {
-
-
             $db = new Database();
             $conn = $db->getConnection();
 
@@ -55,32 +56,30 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         );
 
                         if ($stmt->execute()) {
-                            // Mensaje de éxito
                             $_SESSION['mensaje'] = "Documento subido correctamente.";
                             header("Location: Perfil.php");
                             exit;
                         } else {
-                            echo "Error al guardar el libro: " . $stmt->error;
+                            $_SESSION['errorMensaje'] = "Error al guardar en la base de datos: " . $stmt->error;
                         }
-
                         $stmt->close();
-                        $conn->close();
                     } else {
-                        echo "Error al subir la imagen. Verifica los permisos.";
+                        $_SESSION['errorMensaje'] = "Error al subir la imagen. Verifica los permisos.";
                     }
                 } else {
-                    echo "Formato de imagen no válido.";
+                    $_SESSION['errorMensaje'] = "Formato de imagen no válido. Formatos permitidos: jpg, jpeg, png, gif.";
                 }
             } else {
-                echo "La imagen es obligatoria.";
+                $_SESSION['errorMensaje'] = "La imagen es obligatoria.";
             }
         } else {
-            echo "Error al subir el archivo. Verifica los permisos.";
+            $_SESSION['errorMensaje'] = "Error al subir el archivo. Verifica los permisos.";
         }
     } else {
-        echo "El archivo es obligatorio.";
+        $_SESSION['errorMensaje'] = "El archivo es obligatorio.";
     }
-} else {
-    echo "Método de solicitud no válido.";
+
+    header("Location: Perfil.php");
+    exit;
 }
 ?>

@@ -386,6 +386,17 @@ if ($id_usuario) {
 
             <!-- Subir Documento  -->
             <div id="tab2" class="tab-panel">
+
+                <!-- Mostrar mensaje de error -->
+                <?php if (isset($_SESSION['errorMensaje']) && !empty($_SESSION['errorMensaje'])): ?>
+                    <div class="alert alert-danger" role="alert">
+                        <?php
+                        echo htmlspecialchars($_SESSION['errorMensaje']);
+                        unset($_SESSION['errorMensaje']); 
+                        ?>
+                    </div>
+                <?php endif; ?>
+
                 <h2 style="text-align: center; margin-bottom: 20px;">Subir documento</h2>
                 <form action="libro.php" method="post" enctype="multipart/form-data"
                     style="max-width: 800px; margin: 0 auto; display: grid; grid-template-columns: 1fr 2fr; gap: 15px; align-items: center;">
