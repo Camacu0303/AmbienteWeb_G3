@@ -64,23 +64,46 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['solicitar_trueque']) 
     $stmtInsertTrueque->close();
 }
 
-// Obtener las valoraciones del libro
-$sqlValoraciones = "
-    SELECT 
-        valoracion.calificacion, 
-        valoracion.comentario, 
-        valoracion.fecha, 
-        usuario.nombre AS nombre_usuario
-    FROM valoracion
-    JOIN usuario ON valoracion.id_usuario_ofreciente = usuario.id_usuario
-    WHERE valoracion.id_usuario_receptor = ?";
-$stmtValoraciones = $conn->prepare($sqlValoraciones);
-$stmtValoraciones->bind_param("i", $id_libro);
-$stmtValoraciones->execute();
-$resultValoraciones = $stmtValoraciones->get_result();
-$valoraciones = $resultValoraciones->fetch_all(MYSQLI_ASSOC);
-$stmtValoraciones->close();
-?>
+// Manejar la inserción de valoraciones
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['calificacion'], $_POST['comentario'])) {
+    if ($id_usuario_actual && $id_usuario_actual !== $id_propietario) {
+        $calificacion = intval($_POST['calificacion']);
+        $comentario = trim($_POST['comentario']);
+        $fecha = date("Y-m-d");
+
+        $sqlInsert = "INSERT INTO valoracion (id_usuario_receptor, id_usuario_ofreciente, calificacion, comentario, fecha) 
+                      VALUES (?, ?, ?, ?, ?)";
+        $stmtInsert = $conn->prepare($sqlInsert);
+        $stmtInsert->bind_param("iiiss", $id_propietario, $id_usuario_actual, $calificacion, $comentario, $fecha);
+
+        if ($stmtInsert->execute()) {
+            $_SESSION['mensaje'] = "Valoración enviada correctamente.";
+            header("Location: Detalle.php?id_libro=" . $id_libro);
+            exit;
+        } else {
+            $_SESSION['mensaje'] = "Error al agregar la valoración: " . $stmtInsert->error;
+        }
+        $stmtInsert->close();
+    }
+}
+
+        // Obtener las valoraciones del libro
+        $sqlValoraciones = "
+            SELECT 
+                valoracion.calificacion, 
+                valoracion.comentario, 
+                valoracion.fecha, 
+                usuario.nombre AS nombre_usuario
+            FROM valoracion
+            JOIN usuario ON valoracion.id_usuario_ofreciente = usuario.id_usuario
+            WHERE valoracion.id_usuario_receptor = ?";
+        $stmtValoraciones = $conn->prepare($sqlValoraciones);
+        $stmtValoraciones->bind_param("i", $id_propietario);
+        $stmtValoraciones->execute();
+        $resultValoraciones = $stmtValoraciones->get_result();
+        $valoraciones = $resultValoraciones->fetch_all(MYSQLI_ASSOC);
+        $stmtValoraciones->close();
+        ?>
 
 <!DOCTYPE html>
 <html lang="es">
@@ -140,48 +163,47 @@ $stmtValoraciones->close();
         </div>
 
         <!-- Sección de valoración -->
-        <div class="rating-container mt-4">
-            <h4>Valoraciones</h4>
+        <h4>Valoraciones</h4>
+        <?php if ($id_usuario_actual !== $id_propietario): ?>
+            <form method="POST">
+                <div class="mb-3">
+                    <label for="calificacion" class="form-label">Calificación</label>
+                    <select id="calificacion" name="calificacion" class="form-select" required>
+                        <option value="" selected disabled>Selecciona una calificación</option>
+                        <option value="1">1 - Muy malo</option>
+                        <option value="2">2 - Malo</option>
+                        <option value="3">3 - Regular</option>
+                        <option value="4">4 - Bueno</option>
+                        <option value="5">5 - Excelente</option>
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <label for="comentario" class="form-label">Comentario</label>
+                    <textarea id="comentario" name="comentario" class="form-control" rows="3" required></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary">Enviar</button>
+            </form>
+        <?php else: ?>
+            <p class="text-muted">No puedes valorar tu propio libro.</p>
+        <?php endif; ?>
 
-            <?php if ($id_usuario_actual !== $id_propietario): ?>
-                <!-- Formulario para agregar valoración (solo si no eres la dueña del libro) -->
-                <form method="POST">
-                    <div class="mb-3">
-                        <label for="calificacion" class="form-label">Calificación</label>
-                        <select id="calificacion" name="calificacion" class="form-select" required>
-                            <option value="1">1 - Muy malo</option>
-                            <option value="2">2 - Malo</option>
-                            <option value="3">3 - Regular</option>
-                            <option value="4">4 - Bueno</option>
-                            <option value="5">5 - Excelente</option>
-                        </select>
-                    </div>
-                    <div class="mb-3">
-                        <label for="comentario" class="form-label">Comentario</label>
-                        <textarea id="comentario" name="comentario" class="form-control" rows="3" required></textarea>
-                    </div>
-                    <button type="submit" class="btn btn-success">Enviar</button>
-                </form>
-            <?php endif; ?>
-
-            <!-- Mostrar valoraciones -->
-            <div class="mt-4">
-                <?php if (!empty($valoraciones)): ?>
-                    <?php foreach ($valoraciones as $valoracion): ?>
-                        <div class="card comment-card">
-                            <div class="card-body">
-                                <h5 class="card-title"><?php echo htmlspecialchars($valoracion['nombre_usuario']); ?></h5>
-                                <p class="card-text"><strong>Calificación:</strong>
-                                    <?php echo htmlspecialchars($valoracion['calificacion']); ?></p>
-                                <p class="card-text"><?php echo htmlspecialchars($valoracion['comentario']); ?></p>
-                                <p class="text-muted"><small><?php echo htmlspecialchars($valoracion['fecha']); ?></small></p>
-                            </div>
+        <!-- Mostrar valoraciones -->
+        <div class="mt-4">
+            <?php if (!empty($valoraciones)): ?>
+                <?php foreach ($valoraciones as $valoracion): ?>
+                    <div class="card mb-2">
+                        <div class="card-body">
+                            <h5 class="card-title"><?php echo htmlspecialchars($valoracion['nombre_usuario']); ?></h5>
+                            <p class="card-text"><strong>Calificación:</strong>
+                                <?php echo htmlspecialchars($valoracion['calificacion']); ?></p>
+                            <p class="card-text"><?php echo nl2br(htmlspecialchars($valoracion['comentario'])); ?></p>
+                            <p class="text-muted"><small><?php echo htmlspecialchars($valoracion['fecha']); ?></small></p>
                         </div>
-                    <?php endforeach; ?>
-                <?php else: ?>
-                    <p>No hay valoraciones aún.</p>
-                <?php endif; ?>
-            </div>
+                    </div>
+                <?php endforeach; ?>
+            <?php else: ?>
+                <p>No hay valoraciones aún.</p>
+            <?php endif; ?>
         </div>
 
         <!-- Botón para regresar -->

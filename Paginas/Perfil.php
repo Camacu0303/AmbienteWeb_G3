@@ -93,7 +93,7 @@ $id_usuario = isset($_SESSION['id_usuario']) ? $_SESSION['id_usuario'] : null;
 $misLibros = [];
 if ($id_usuario) {
     // Obtener información del usuario
-    $sqlUsuario = "SELECT nombre, email, foto_perfil, telefono, direccion, idioma_preferido, intereses, usuario, pass FROM usuario WHERE id_usuario = ?";
+    $sqlUsuario = "SELECT nombre, email, foto_perfil, telefono, direccion, idioma_preferido, intereses, usuario FROM usuario WHERE id_usuario = ?";
     $stmt = $conn->prepare($sqlUsuario);
     $stmt->bind_param("i", $id_usuario);
     $stmt->execute();
@@ -335,9 +335,6 @@ if ($id_usuario) {
                             <label for="usuario" class="form-label">Nombre de Usuario:</label>
                             <input type="text" id="usuario" name="usuario"
                                 value="<?php echo htmlspecialchars($usuario['usuario']); ?>" class="form-control">
-
-                            <label for="pass" class="form-label">Nueva Contraseña:</label>
-                            <input type="password" id="pass" name="pass" class="form-control">
 
                             <label for="telefono" class="form-label">Teléfono:</label>
                             <input type="text" id="telefono" name="telefono"
