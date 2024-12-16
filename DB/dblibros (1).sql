@@ -3,8 +3,8 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 16-12-2024 a las 07:29:03
--- Versión del servidor: 10.4.32-MariaDB
+-- Tiempo de generación: 16-12-2024 a las 18:29:34
+-- Versión del servidor: 8.0.36
 -- Versión de PHP: 8.2.12
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
@@ -28,11 +28,11 @@ SET time_zone = "+00:00";
 --
 
 CREATE TABLE `blog` (
-  `id_blog` int(11) NOT NULL,
-  `titulo` varchar(255) NOT NULL,
-  `contenido` text NOT NULL,
-  `id_usuario` int(11) NOT NULL,
-  `fecha_publicacion` datetime NOT NULL DEFAULT current_timestamp()
+  `id_blog` int NOT NULL,
+  `titulo` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
+  `contenido` text COLLATE utf8mb4_general_ci NOT NULL,
+  `id_usuario` int NOT NULL,
+  `fecha_publicacion` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -70,8 +70,8 @@ INSERT INTO `blog` (`id_blog`, `titulo`, `contenido`, `id_usuario`, `fecha_publi
 --
 
 CREATE TABLE `categoria` (
-  `id_categoria` int(11) NOT NULL,
-  `nombre` varchar(100) NOT NULL
+  `id_categoria` int NOT NULL,
+  `nombre` varchar(100) COLLATE utf8mb4_general_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -103,11 +103,11 @@ INSERT INTO `categoria` (`id_categoria`, `nombre`) VALUES
 --
 
 CREATE TABLE `comentarios_blog` (
-  `id_comentario` int(11) NOT NULL,
-  `id_blog` int(11) NOT NULL,
-  `id_usuario` int(11) NOT NULL,
-  `contenido` text NOT NULL,
-  `fecha_comentario` datetime NOT NULL DEFAULT current_timestamp()
+  `id_comentario` int NOT NULL,
+  `id_blog` int NOT NULL,
+  `id_usuario` int NOT NULL,
+  `contenido` text COLLATE utf8mb4_general_ci NOT NULL,
+  `fecha_comentario` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -129,8 +129,8 @@ INSERT INTO `comentarios_blog` (`id_comentario`, `id_blog`, `id_usuario`, `conte
 --
 
 CREATE TABLE `estado_intercambio` (
-  `id_estado` int(11) NOT NULL,
-  `nombre_estado` varchar(50) NOT NULL
+  `id_estado` int NOT NULL,
+  `nombre_estado` varchar(50) COLLATE utf8mb4_general_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -149,8 +149,8 @@ INSERT INTO `estado_intercambio` (`id_estado`, `nombre_estado`) VALUES
 --
 
 CREATE TABLE `estado_libro` (
-  `id_estado` int(11) NOT NULL,
-  `nombre` varchar(50) NOT NULL
+  `id_estado` int NOT NULL,
+  `nombre` varchar(50) COLLATE utf8mb4_general_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -174,8 +174,8 @@ INSERT INTO `estado_libro` (`id_estado`, `nombre`) VALUES
 --
 
 CREATE TABLE `idiomas` (
-  `id_idioma` int(11) NOT NULL,
-  `nombre` varchar(100) NOT NULL
+  `id_idioma` int NOT NULL,
+  `nombre` varchar(100) COLLATE utf8mb4_general_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -198,12 +198,12 @@ INSERT INTO `idiomas` (`id_idioma`, `nombre`) VALUES
 --
 
 CREATE TABLE `intercambio` (
-  `id_intercambio` int(11) NOT NULL,
-  `id_usuario_ofreciente` int(11) NOT NULL,
-  `id_usuario_receptor` int(11) NOT NULL,
-  `id_libro_solicitado` int(11) DEFAULT NULL,
+  `id_intercambio` int NOT NULL,
+  `id_usuario_ofreciente` int NOT NULL,
+  `id_usuario_receptor` int NOT NULL,
+  `id_libro_solicitado` int DEFAULT NULL,
   `fecha_intercambio` date NOT NULL,
-  `id_estado` int(11) NOT NULL
+  `id_estado` int NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -211,7 +211,10 @@ CREATE TABLE `intercambio` (
 --
 
 INSERT INTO `intercambio` (`id_intercambio`, `id_usuario_ofreciente`, `id_usuario_receptor`, `id_libro_solicitado`, `fecha_intercambio`, `id_estado`) VALUES
-(1, 5, 4, 2, '2024-12-16', 2);
+(1, 5, 4, 2, '2024-12-16', 2),
+(3, 5, 6, 5, '2024-12-16', 2),
+(4, 4, 9, 22, '2024-12-16', 1),
+(5, 8, 5, 16, '2024-12-16', 2);
 
 -- --------------------------------------------------------
 
@@ -220,15 +223,15 @@ INSERT INTO `intercambio` (`id_intercambio`, `id_usuario_ofreciente`, `id_usuari
 --
 
 CREATE TABLE `libro` (
-  `id_libro` int(11) NOT NULL,
-  `titulo` varchar(255) NOT NULL,
-  `autor` varchar(255) DEFAULT NULL,
-  `id_categoria` int(11) DEFAULT NULL,
-  `id_estado` int(11) DEFAULT NULL,
-  `descripcion` varchar(1024) DEFAULT NULL,
-  `id_usuario` int(11) DEFAULT NULL,
-  `archivo` varchar(255) DEFAULT NULL,
-  `imagen` varchar(255) NOT NULL
+  `id_libro` int NOT NULL,
+  `titulo` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
+  `autor` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `id_categoria` int DEFAULT NULL,
+  `id_estado` int DEFAULT NULL,
+  `descripcion` varchar(1024) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `id_usuario` int DEFAULT NULL,
+  `archivo` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `imagen` varchar(255) COLLATE utf8mb4_general_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -247,9 +250,22 @@ INSERT INTO `libro` (`id_libro`, `titulo`, `autor`, `id_categoria`, `id_estado`,
 (9, 'El guardián entre el centeno', 'J.D. Salinger', 1, 3, 'La historia de Holden Caulfield, un adolescente que navega por la confusión y alienación de la adolescencia en Nueva York.', 7, 'El guardián entre el centeno.pdf', 'el-guardian-entre-el-centeno.jpg'),
 (10, 'Sapiens: De animales a dioses', 'Yuval Noah Harari', 2, 2, 'Una exploración fascinante de la historia de la humanidad, desde los primeros Homo sapiens hasta la actualidad, abordando temas como la revolución agrícola, el capitalismo, las religiones y el futuro de nuestra especie.', 7, 'De-animales-a-dioses-Breve-historia-de-la-humanidad.pdf', 'Sapiens- De animales a dioses.jpeg'),
 (11, 'Hábitos atómicos', 'James Clear', 2, 1, 'Una guía práctica para cambiar hábitos y mejorar un 1% cada día. Utiliza investigaciones científicas y ejemplos reales para ofrecer estrategias claras para desarrollar rutinas efectivas.', 8, 'HABITOS-ATOMICOS-JAMES-CLEAR.pdf', 'Hábitos atómicos.jpg'),
-(12, 'Piense y hágase rico', 'Napoleon Hill', 2, 1, 'Un clásico de autoayuda basado en entrevistas con grandes empresarios como Andrew Carnegie y Henry Ford. Ofrece principios y técnicas para alcanzar el éxito personal y financiero.', 8, 'piense_y_hagase_rico.pdf', 'piense y hagase rico.jpg'),
+(12, 'Piense y hágase rico', 'Napoleon Hill', 12, 1, 'Un clásico de autoayuda basado en entrevistas con grandes empresarios como Andrew Carnegie y Henry Ford. Ofrece principios y técnicas para alcanzar el éxito personal y financiero.', 8, 'piense_y_hagase_rico.pdf', 'piense y hagase rico.jpg'),
 (13, 'Breve historia del tiempo', 'Stephen Hawking', 3, 1, 'Explica conceptos complejos de física como el Big Bang, los agujeros negros y el tiempo, de manera comprensible para el público general. Es un viaje a las preguntas más fundamentales sobre el universo.', 9, 'Stephen_Hawking_Historia_del_Tiempo.pdf', 'Breve historia del tiempo.jpeg'),
-(14, 'Cosmos', 'Carl Sagan', 3, 3, 'Una obra que mezcla ciencia, historia y filosofía, explorando temas como el origen del universo, la vida y la evolución, mientras reflexiona sobre nuestro lugar en el cosmos.', 9, 'cosmos.pdf', 'Cosmos - Carl Sagan.jpeg');
+(14, 'Cosmos', 'Carl Sagan', 3, 3, 'Una obra que mezcla ciencia, historia y filosofía, explorando temas como el origen del universo, la vida y la evolución, mientras reflexiona sobre nuestro lugar en el cosmos.', 9, 'cosmos.pdf', 'Cosmos - Carl Sagan.jpeg'),
+(15, 'Steve Jobs', 'Walter Isaacson', 4, 1, 'Una biografía autorizada que narra la vida del fundador de Apple, sus logros, desafíos y la forma en que revolucionó la tecnología, el diseño y la industria de la música.', 5, 'Steve Jobs.pdf', 'Steve Jobs.jpg'),
+(16, 'Einstein: Su vida y su universo', 'Walter Isaacson', 4, 2, 'Relato de la vida de Albert Einstein, su genialidad científica y su influencia en la física moderna, junto con su compleja vida personal.', 5, 'IsaacsonW-Einstein-su-vida-y-su-universo.pdf', 'Einstein -Su vida y su universo - Walter Isaacson.jpg'),
+(17, 'Dune', 'Frank Herbert', 6, 1, 'En un futuro lejano, la familia Atreides lucha por el control del desértico planeta Arrakis, fuente de la especia más valiosa del universo. Una obra maestra que combina política, ecología y aventuras.', 6, 'Dune - Frank Herbert.pdf', 'Dune - Frank Herbert.jpeg'),
+(18, 'Harry Potter y la piedra filosofal - J.K. Rowling', 'J.K. Rowling', 7, 1, 'El inicio de la famosa saga que sigue a Harry Potter, un joven mago, y sus aventuras en el mundo mágico mientras enfrenta al oscuro Voldemort.', 7, 'Rowling, J. K. -  Harry Potter y la piedra filosofal.pdf', 'Harry Potter y la piedra filosofal - J.K. Rowling.jpeg'),
+(19, 'El código Da Vinci', 'Dan Brown', 8, 3, 'Un thriller lleno de enigmas y conspiraciones donde Robert Langdon desentraña secretos históricos relacionados con la Iglesia y el Santo Grial.', 7, 'El Código Da Vinci.pdf', 'El código Da Vinci - Dan Brown.jpeg'),
+(20, 'Posdata: Te amo ', 'Cecelia Ahern', 9, 2, 'Una emotiva historia sobre el amor y el duelo, donde Holly recibe cartas de su difunto esposo para ayudarla a sanar y seguir adelante.', 7, 'Ahern, Cecilia.- Posdata, Te amo.pdf', 'Posdata Te amo - Cecelia Ahern.jpeg'),
+(21, 'Los 7 hábitos de la gente altamente efectiva', 'Stephen R. Covey', 11, 1, 'Ofrece principios prácticos para desarrollar hábitos que mejoran la efectividad personal y profesional, ayudando a alcanzar metas significativas.', 8, 'los7HabitosGenteAltamenteEfectiva.pdf', 'Los 7 hábitos de la gente altamente efectiva - Stephen R. Covey.png'),
+(22, 'Dracula', 'Bram Stokker', 7, 1, 'Una novela gótica que sigue al conde Drácula, un vampiro que viaja a Inglaterra para extender su maldición, enfrentándose a un grupo liderado por Van Helsing. Un clásico del terror que definió el mito moderno del vampiro.', 9, 'Dracula.pdf', 'Dracula.jpeg'),
+(23, 'Dracula', 'Bram Stokker', 7, 1, 'La lucha entre el bien y el mal toma forma en la figura del conde Drácula, un vampiro que siembra el terror mientras un grupo de aliados intenta detenerlo. Una obra fundamental de la literatura gótica.', 5, 'Dracula1.pdf', 'Dracula1.jpeg'),
+(24, '¿Por qué dormimos?', 'Matthew Walker', 14, 2, 'Analiza la importancia del sueño para la salud física y mental, con consejos respaldados por la ciencia.', 4, '42797_TPCW_Por que dormimos.pdf', 'Porque dormimos.jpeg'),
+(25, 'Hacia rutas salvajes', 'Jon Krakauer', 16, 1, 'La historia real de Christopher McCandless, un joven que abandona todo para adentrarse en la naturaleza salvaje de Alaska, buscando libertad y propósito.', 4, 'batxillerat__hacia_rutas_salvajes.pdf', 'Hacia rutas salvajes.jpeg'),
+(26, 'Cumbres borrascosas', 'Emily Brontë', 9, 3, 'Una apasionada y tormentosa relación entre Heathcliff y Catherine, ambientada en los sombríos páramos ingleses.', 4, 'Charlotte Bronté Cumbres Borrascosas.pdf', 'Cumbres borrascosas.jpeg'),
+(27, 'La mujer de blanco', 'Wilkie Collins', 1, 1, 'Una novela gótica que combina intriga, romance y un misterio que gira en torno a una misteriosa mujer vestida de blanco.', 4, 'LA-DAMA-DE-BLANCO-de-Wilkie-Collins.pdf', 'La mujer de blanco - Wilkie Collins.jpeg');
 
 -- --------------------------------------------------------
 
@@ -258,10 +274,10 @@ INSERT INTO `libro` (`id_libro`, `titulo`, `autor`, `id_categoria`, `id_estado`,
 --
 
 CREATE TABLE `seguidores` (
-  `id_seguimiento` int(11) NOT NULL,
-  `id_usuario_seguidor` int(11) NOT NULL,
-  `id_usuario_seguido` int(11) NOT NULL,
-  `fecha_seguimiento` datetime DEFAULT current_timestamp()
+  `id_seguimiento` int NOT NULL,
+  `id_usuario_seguidor` int NOT NULL,
+  `id_usuario_seguido` int NOT NULL,
+  `fecha_seguimiento` datetime DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -279,11 +295,11 @@ INSERT INTO `seguidores` (`id_seguimiento`, `id_usuario_seguidor`, `id_usuario_s
 --
 
 CREATE TABLE `token_seguridad` (
-  `id` int(11) NOT NULL,
-  `user_email` varchar(255) NOT NULL,
-  `token` varchar(512) NOT NULL,
+  `id` int NOT NULL,
+  `user_email` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
+  `token` varchar(512) COLLATE utf8mb4_general_ci NOT NULL,
   `expires_at` datetime NOT NULL,
-  `created_at` datetime DEFAULT current_timestamp()
+  `created_at` datetime DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -304,18 +320,18 @@ INSERT INTO `token_seguridad` (`id`, `user_email`, `token`, `expires_at`, `creat
 --
 
 CREATE TABLE `usuario` (
-  `id_usuario` int(11) NOT NULL,
-  `nombre` varchar(100) NOT NULL,
-  `email` varchar(100) NOT NULL,
-  `usuario` varchar(20) NOT NULL,
-  `pass` varchar(255) NOT NULL,
-  `privilegio` varchar(50) NOT NULL,
-  `fecha_registro` datetime NOT NULL DEFAULT current_timestamp(),
-  `foto_perfil` varchar(255) DEFAULT NULL,
-  `telefono` varchar(20) DEFAULT NULL,
-  `direccion` text DEFAULT NULL,
-  `idioma_preferido` varchar(50) DEFAULT NULL,
-  `intereses` text DEFAULT NULL
+  `id_usuario` int NOT NULL,
+  `nombre` varchar(100) COLLATE utf8mb4_general_ci NOT NULL,
+  `email` varchar(100) COLLATE utf8mb4_general_ci NOT NULL,
+  `usuario` varchar(20) COLLATE utf8mb4_general_ci NOT NULL,
+  `pass` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
+  `privilegio` varchar(50) COLLATE utf8mb4_general_ci NOT NULL,
+  `fecha_registro` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `foto_perfil` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `telefono` varchar(20) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `direccion` text COLLATE utf8mb4_general_ci,
+  `idioma_preferido` varchar(50) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `intereses` text COLLATE utf8mb4_general_ci
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -326,12 +342,13 @@ INSERT INTO `usuario` (`id_usuario`, `nombre`, `email`, `usuario`, `pass`, `priv
 (2, 'Josue Campos Acuña', 'coder.josue@gmail.com', 'camacu0303', '$2y$10$.aT/HGoxhKJsPPGmO2dsuu9PyrNz9SlNv.owxCOWofGfiytuU85qS', 'usuario', '2024-12-05 06:54:03', NULL, NULL, NULL, NULL, NULL),
 (3, 'Admin User', 'coder.pruebas.josue@gmail.com', 'admin', '$2y$10$/CShpOgjA7w5zMX8CkJgWuY1GvcxMX1Lwm1C53m0La4/VIpqB2XDC', 'admin', '2024-12-05 06:54:03', NULL, NULL, NULL, NULL, NULL),
 (4, 'Fiorella Portuguez Rojas', 'portuguezfiore@gmail.com', 'fioportu', '$2y$10$JkoKWRbaehKyEZ5mSt1B1OO2FXIReMrH1gpMtNhc8Jjlyh/dkFsBu', 'usuario', '2024-12-13 21:11:52', NULL, NULL, NULL, NULL, NULL),
-(5, 'Manuel', 'manuel@gmail.com', 'manu01', '$2y$10$ntUMvdMCckLP3TdeBkFzTenhEmCoPSOlckRIB5Ty0MPgbtJ4x6On6', 'usuario', '2024-12-15 12:25:54', NULL, NULL, NULL, NULL, NULL),
+(5, 'Manuel Solano Fuentes', 'manuel@gmail.com', 'manu01', '$2y$10$ntUMvdMCckLP3TdeBkFzTenhEmCoPSOlckRIB5Ty0MPgbtJ4x6On6', 'usuario', '2024-12-15 12:25:54', NULL, '99999999', 'Panama', 'Español', 'Misterio,Autoayuda'),
 (6, 'Jose Mora Perez', 'jose@gmail.com', 'jose01', '$2y$10$CiIf0zniKzDVkDnxwVndf.clDjjpOaFdHh2xZpvP.bZUr.Fz6zeEO', 'usuario', '2024-12-15 22:30:57', 'Jose.jpg', '77774444', 'San Pedro, Montes de Oca', 'Español', 'Literatura Clásica,Fantasía,Romance'),
 (7, 'María Fernanda Murillo Mora', 'mariafer@gmail.com', 'marifer2000', '$2y$10$cvOADn2.MptU08dFdmzbMu0umUQrqnjQIs6CslO8vbEW/gSyuBxMu', 'usuario', '2024-12-15 23:08:06', 'fernanda.png', '55555555', 'Guatemala', 'Alemán', 'Ficción,Fantasía'),
-(8, 'Karla Gomez Marín', 'karlita2000@gmail.com', 'karla', '$2y$10$oo00JBr9MCmbXXqIdGpKPOu/ASnTilT8AfYsgfCinicf7Da4kRwxm', 'usuario', '2024-12-15 23:18:12', NULL, '', '', 'Español', 'No Ficción'),
-(9, 'Luis Miguel Calderon Jimenez', 'luismi@gmail.com', 'luis01', '$2y$10$IhEsKOxIvCbl5saaHfBbSuam4eEwrw2hgGyuFX7gqu/dWlN07yaIu', 'usuario', '2024-12-15 23:24:15', NULL, NULL, NULL, NULL, NULL),
-(10, 'Said VA', 'said@gmail.com', 'theBigS', '$2y$10$ZjxG1TW0VKI7VGzl.RIAs.0A/TLZAXtcTyweABOyh/JYk3wJHu9TC', 'usuario', '2024-12-15 23:58:25', NULL, NULL, NULL, NULL, NULL);
+(8, 'Karla Gomez Marín', 'karlita2000@gmail.com', 'karla', '$2y$10$oo00JBr9MCmbXXqIdGpKPOu/ASnTilT8AfYsgfCinicf7Da4kRwxm', 'usuario', '2024-12-15 23:18:12', NULL, '', '', 'Español,Inglés', 'No Ficción,Fantasía'),
+(9, 'Luis Miguel Calderon Jimenez', 'luismi@gmail.com', 'luis01', '$2y$10$IhEsKOxIvCbl5saaHfBbSuam4eEwrw2hgGyuFX7gqu/dWlN07yaIu', 'usuario', '2024-12-15 23:24:15', NULL, '', 'Mexico', '', ''),
+(10, 'Said VA', 'said@gmail.com', 'theBigS', '$2y$10$ZjxG1TW0VKI7VGzl.RIAs.0A/TLZAXtcTyweABOyh/JYk3wJHu9TC', 'usuario', '2024-12-15 23:58:25', NULL, NULL, NULL, NULL, NULL),
+(11, 'Carlos Chavez Gonzales', 'carlitos01@gmail.com', 'carlitos01', '$2y$10$G8Dd4eGzSRfTY/ZudOUrN.rS0Oa1cLIZ6RskJX6PiiNloga6sxl4C', 'usuario', '2024-12-16 10:00:15', NULL, '77777777', 'Nicaragua', 'Español', 'Cocina,Salud');
 
 -- --------------------------------------------------------
 
@@ -340,13 +357,21 @@ INSERT INTO `usuario` (`id_usuario`, `nombre`, `email`, `usuario`, `pass`, `priv
 --
 
 CREATE TABLE `valoracion` (
-  `id_valoracion` int(11) NOT NULL,
-  `id_usuario_receptor` int(11) NOT NULL,
-  `id_usuario_ofreciente` int(11) NOT NULL,
-  `calificacion` int(11) NOT NULL,
-  `comentario` text DEFAULT NULL,
+  `id_valoracion` int NOT NULL,
+  `id_usuario_receptor` int NOT NULL,
+  `id_usuario_ofreciente` int NOT NULL,
+  `calificacion` int NOT NULL,
+  `comentario` text COLLATE utf8mb4_general_ci,
   `fecha` date NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `valoracion`
+--
+
+INSERT INTO `valoracion` (`id_valoracion`, `id_usuario_receptor`, `id_usuario_ofreciente`, `calificacion`, `comentario`, `fecha`) VALUES
+(1, 6, 5, 5, 'Muy buen libro, está muy completo. Gracias', '2024-12-16'),
+(2, 5, 8, 5, 'Excelente libro.', '2024-12-16');
 
 --
 -- Índices para tablas volcadas
@@ -449,73 +474,73 @@ ALTER TABLE `valoracion`
 -- AUTO_INCREMENT de la tabla `blog`
 --
 ALTER TABLE `blog`
-  MODIFY `id_blog` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
+  MODIFY `id_blog` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
 
 --
 -- AUTO_INCREMENT de la tabla `categoria`
 --
 ALTER TABLE `categoria`
-  MODIFY `id_categoria` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
+  MODIFY `id_categoria` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
 
 --
 -- AUTO_INCREMENT de la tabla `comentarios_blog`
 --
 ALTER TABLE `comentarios_blog`
-  MODIFY `id_comentario` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id_comentario` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT de la tabla `estado_intercambio`
 --
 ALTER TABLE `estado_intercambio`
-  MODIFY `id_estado` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id_estado` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT de la tabla `estado_libro`
 --
 ALTER TABLE `estado_libro`
-  MODIFY `id_estado` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `id_estado` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT de la tabla `idiomas`
 --
 ALTER TABLE `idiomas`
-  MODIFY `id_idioma` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `id_idioma` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT de la tabla `intercambio`
 --
 ALTER TABLE `intercambio`
-  MODIFY `id_intercambio` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id_intercambio` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT de la tabla `libro`
 --
 ALTER TABLE `libro`
-  MODIFY `id_libro` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
+  MODIFY `id_libro` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=28;
 
 --
 -- AUTO_INCREMENT de la tabla `seguidores`
 --
 ALTER TABLE `seguidores`
-  MODIFY `id_seguimiento` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id_seguimiento` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT de la tabla `token_seguridad`
 --
 ALTER TABLE `token_seguridad`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT de la tabla `usuario`
 --
 ALTER TABLE `usuario`
-  MODIFY `id_usuario` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `id_usuario` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- AUTO_INCREMENT de la tabla `valoracion`
 --
 ALTER TABLE `valoracion`
-  MODIFY `id_valoracion` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id_valoracion` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- Restricciones para tablas volcadas
