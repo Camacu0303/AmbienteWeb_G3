@@ -12,7 +12,7 @@
 <body>
     <div class="navImage"></div>
     <div class="navContainer">
-        <form action="Catalogo.php" method="GET">
+        <form action="Catalogo.php" method="GET" class="d-flex">
             <div class="input-group">
                 <input type="text" class="form-control" name="busqueda"
                     placeholder="Buscar libros por título, autor o categoría">

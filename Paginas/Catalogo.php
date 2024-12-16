@@ -14,32 +14,53 @@ $resultCategorias = $conn->query($sqlCategorias);
 $sqlAutores = "SELECT DISTINCT autor FROM libro";
 $resultAutores = $conn->query($sqlAutores);
 
-// Obtener libros filtrados (si hay filtros aplicados)
+// Obtener libros filtrados
 $catalogoLibros = [];
 $filtroCategoria = $_GET['categoria'] ?? '';
 $filtroAutor = $_GET['autor'] ?? '';
+$busqueda = $_GET['busqueda'] ?? ''; 
 
-$sqlLibros = "SELECT * FROM libro WHERE 1=1";
-if (!empty($filtroCategoria)) {
-    $sqlLibros .= " AND id_categoria = ?";
+$sqlLibros = "
+    SELECT l.*, c.nombre AS categoria_nombre 
+    FROM libro l
+    JOIN categoria c ON l.id_categoria = c.id_categoria
+    WHERE 1=1
+";
+
+$params = [];
+$types = "";
+
+// Agregar condición para la barra de búsqueda
+if (!empty($busqueda)) {
+    $sqlLibros .= " AND (l.titulo LIKE ? OR l.autor LIKE ? OR c.nombre LIKE ?)";
+    $params[] = "%$busqueda%";
+    $params[] = "%$busqueda%";
+    $params[] = "%$busqueda%";
+    $types .= "sss";
 }
+
+// Agregar condición para categoría
+if (!empty($filtroCategoria)) {
+    $sqlLibros .= " AND l.id_categoria = ?";
+    $params[] = $filtroCategoria;
+    $types .= "i";
+}
+
+// Agregar condición para autor
 if (!empty($filtroAutor)) {
-    $sqlLibros .= " AND autor = ?";
+    $sqlLibros .= " AND l.autor = ?";
+    $params[] = $filtroAutor;
+    $types .= "s";
 }
 
 $stmt = $conn->prepare($sqlLibros);
-
-if (!empty($filtroCategoria) && !empty($filtroAutor)) {
-    $stmt->bind_param("is", $filtroCategoria, $filtroAutor);
-} elseif (!empty($filtroCategoria)) {
-    $stmt->bind_param("i", $filtroCategoria);
-} elseif (!empty($filtroAutor)) {
-    $stmt->bind_param("s", $filtroAutor);
+if (!empty($params)) {
+    $stmt->bind_param($types, ...$params);
 }
-
 $stmt->execute();
 $resultLibros = $stmt->get_result();
 
+// Obtener resultados
 while ($row = $resultLibros->fetch_assoc()) {
     $catalogoLibros[] = $row;
 }
