@@ -1,4 +1,5 @@
 <?php
+ob_start();
 $requiredRole = 'usuario';
 require_once "../Utilidades/session_checkout.php";
 include("../Plantillas/nav.php");
@@ -6,6 +7,69 @@ require_once "../Utilidades/Conn.php";
 
 $db = new Database();
 $conn = $db->getConnection();
+
+$id_usuario = isset($_SESSION['id_usuario']) ? $_SESSION['id_usuario'] : null;
+
+// Validar que el usuario esté autenticado
+if (!$id_usuario) {
+    $_SESSION['mensaje'] = "Por favor, inicia sesión.";
+    header("Location: login.php");
+    exit;
+}
+// TRUEQUES SOLICITADOS
+$sqlSolicitados = "
+    SELECT i.id_intercambio, i.fecha_intercambio, i.id_estado, 
+           l.titulo AS libro_titulo, u.nombre AS propietario, 
+           e.nombre_estado AS estado_intercambio, l.archivo, l.id_libro
+    FROM intercambio i
+    JOIN libro l ON i.id_libro_solicitado = l.id_libro
+    JOIN usuario u ON i.id_usuario_receptor = u.id_usuario
+    JOIN estado_intercambio e ON i.id_estado = e.id_estado
+    WHERE i.id_usuario_ofreciente = ?
+";
+$stmt = $conn->prepare($sqlSolicitados);
+$stmt->bind_param("i", $id_usuario);
+$stmt->execute();
+$solicitados = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
+$stmt->close();
+
+// TRUEQUES RECIBIDOS
+$sqlRecibidos = "
+    SELECT i.id_intercambio, i.fecha_intercambio, i.id_estado, 
+           l.titulo AS libro_titulo, u.nombre AS solicitante, 
+           e.nombre_estado AS estado_intercambio, i.id_libro_solicitado
+    FROM intercambio i
+    JOIN libro l ON i.id_libro_solicitado = l.id_libro
+    JOIN usuario u ON i.id_usuario_ofreciente = u.id_usuario
+    JOIN estado_intercambio e ON i.id_estado = e.id_estado
+    WHERE i.id_usuario_receptor = ?
+";
+$stmt = $conn->prepare($sqlRecibidos);
+$stmt->bind_param("i", $id_usuario);
+$stmt->execute();
+$recibidos = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
+$stmt->close();
+
+// Actualizar el estado del trueque
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $id_intercambio = intval($_POST['id_intercambio']);
+    $accion = $_POST['accion'];
+    $nuevo_estado = ($accion === 'aceptar') ? 2 : 3; // 2 = Completado, 3 = Cancelado
+    $mensaje = ($accion === 'aceptar') ? "Trueque confirmado exitosamente." : "Trueque cancelado.";
+
+    $sqlUpdate = "UPDATE intercambio SET id_estado = ? WHERE id_intercambio = ?";
+    $stmt = $conn->prepare($sqlUpdate);
+    $stmt->bind_param("ii", $nuevo_estado, $id_intercambio);
+
+    if ($stmt->execute()) {
+        $_SESSION['mensaje'] = $mensaje;
+    } else {
+        $_SESSION['mensaje'] = "Error al actualizar el estado del trueque.";
+    }
+    $stmt->close();
+    header("Location: Perfil.php#tab3");
+    exit;
+}
 
 // Obtener las categorías
 $sqlCategorias = "SELECT id_categoria, nombre FROM categoria";
@@ -217,6 +281,24 @@ if ($id_usuario) {
             border-radius: 8px;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
+
+        .table th,
+        .table td {
+            vertical-align: middle;
+            font-size: 14px;
+        }
+
+        .table th {
+            background-color: #f8f9fa;
+            font-weight: bold;
+            color: #495057;
+        }
+
+        .badge {
+            font-size: 12px;
+            padding: 8px 12px;
+            border-radius: 12px;
+        }
     </style>
 </head>
 
@@ -363,9 +445,93 @@ if ($id_usuario) {
                 </form>
             </div>
 
+            <!-- Historial de Trueques -->
             <div id="tab3" class="tab-panel">
-                <h2>Historial de trueques</h2>
-                <p>Contenido relacionado con el historial de trueques.</p>
+                <h2 class="text-center my-4">Historial de Trueques</h2>
+
+                <!-- Trueques Solicitados -->
+                <h4 class="mb-3">Trueques Solicitados</h4>
+                <table class="table table-bordered text-center">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Libro</th>
+                            <th>Propietario</th>
+                            <th>Fecha de Solicitud</th>
+                            <th>Estado de Intercambio</th>
+                            <th>Archivo</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php if (!empty($solicitados)): ?>
+                            <?php foreach ($solicitados as $trueque): ?>
+                                <tr>
+                                    <td><?php echo htmlspecialchars($trueque['libro_titulo']); ?></td>
+                                    <td><?php echo htmlspecialchars($trueque['propietario']); ?></td>
+                                    <td><?php echo htmlspecialchars($trueque['fecha_intercambio']); ?></td>
+                                    <td><?php echo htmlspecialchars($trueque['estado_intercambio']); ?></td>
+                                    <td>
+                                        <?php if ($trueque['id_estado'] == 2): ?>
+                                            <a href="descargar.php?id_libro=<?php echo urlencode($trueque['id_libro']); ?>"
+                                                class="btn btn-primary btn-sm">Descargar</a>
+                                        <?php else: ?>
+                                            <span class="text-muted">No disponible</span>
+                                        <?php endif; ?>
+                                    </td>
+                                </tr>
+                            <?php endforeach; ?>
+                        <?php else: ?>
+                            <tr>
+                                <td colspan="5">No has solicitado ningún trueque.</td>
+                            </tr>
+                        <?php endif; ?>
+                    </tbody>
+                </table>
+
+                <!-- Trueques Recibidos -->
+                <h4 class="mt-5 mb-3">Trueques Recibidos</h4>
+                <table class="table table-bordered text-center">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Libro</th>
+                            <th>Solicitante</th>
+                            <th>Fecha de Solicitud</th>
+                            <th>Estado de Intercambio</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php if (!empty($recibidos)): ?>
+                            <?php foreach ($recibidos as $trueque): ?>
+                                <tr>
+                                    <td><?php echo htmlspecialchars($trueque['libro_titulo']); ?></td>
+                                    <td><?php echo htmlspecialchars($trueque['solicitante']); ?></td>
+                                    <td><?php echo htmlspecialchars($trueque['fecha_intercambio']); ?></td>
+                                    <td><?php echo htmlspecialchars($trueque['estado_intercambio']); ?></td>
+                                    <td>
+                                        <?php if ($trueque['id_estado'] == 1): ?>
+                                            <form method="POST" class="d-inline">
+                                                <input type="hidden" name="id_intercambio"
+                                                    value="<?php echo $trueque['id_intercambio']; ?>">
+                                                <button name="accion" value="aceptar"
+                                                    class="btn btn-success btn-sm">Aceptar</button>
+                                                <button name="accion" value="rechazar"
+                                                    class="btn btn-danger btn-sm">Rechazar</button>
+                                            </form>
+                                        <?php elseif ($trueque['id_estado'] == 2): ?>
+                                            <span class="text-success">Completado</span>
+                                        <?php elseif ($trueque['id_estado'] == 3): ?>
+                                            <span class="text-danger">Cancelado</span>
+                                        <?php endif; ?>
+                                    </td>
+                                </tr>
+                            <?php endforeach; ?>
+                        <?php else: ?>
+                            <tr>
+                                <td colspan="5">No has recibido ninguna solicitud de trueque.</td>
+                            </tr>
+                        <?php endif; ?>
+                    </tbody>
+                </table>
             </div>
 
             <div id="tab4" class="tab-panel">
@@ -381,8 +547,6 @@ if ($id_usuario) {
                                         <img src="../uploadsLib/<?php echo !empty($libro['imagen']) ? htmlspecialchars($libro['imagen']) : 'default-image.png'; ?>"
                                             alt="Imagen del libro" class="card-img-top"
                                             style="height: 150px; object-fit: cover;">
-
-
                                         <div class="card-body d-flex flex-column">
                                             <h5 class="card-title"><?php echo htmlspecialchars($libro['titulo']); ?></h5>
                                             <p class="card-text"><strong>Autor:</strong>
@@ -456,6 +620,7 @@ if ($id_usuario) {
                 <?php unset($_SESSION['mensaje']);
                 ?>
             <?php endif; ?>
+            <?php ob_end_flush(); ?>
 </body>
 
 </html>

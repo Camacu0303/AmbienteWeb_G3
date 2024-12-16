@@ -14,7 +14,7 @@ function registerUser($conn, $nombre, $email, $usuario, $password)
     
     if ($stmt->execute()) {
         // Redirigir al usuario a una página de éxito
-        header("Location: index.php"); 
+        header("Location: login.php"); 
         exit();
     } else {
         echo "Error al registrar el usuario: " . $stmt->error;
