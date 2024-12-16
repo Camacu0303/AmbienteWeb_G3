@@ -4,6 +4,9 @@ require_once "../Utilidades/mail.php";
 $db = new Database();
 $conn = $db->getConnection();
 session_start();
+
+$error_message = "";
+
 function notificar($usuario, $correoUsuario)
 {
     $ip = $_SERVER['REMOTE_ADDR']; // Dirección IP del usuario
@@ -21,6 +24,7 @@ function notificar($usuario, $correoUsuario)
     $titulo = "Notificación de inicio de sesión";
     enviarCorreo($mensaje, $correoUsuario, $titulo);
 }
+
 function notificarIntentoFallido($usuario, $correoUsuario)
 {
     $ip = $_SERVER['REMOTE_ADDR']; // Dirección IP del intento
@@ -41,27 +45,24 @@ function notificarIntentoFallido($usuario, $correoUsuario)
     enviarCorreo($mensaje, $correoUsuario, $titulo);
 }
 
-function loginUser($conn, $usuario, $enteredPassword)
+function loginUser($conn, $usuario, $enteredPassword, &$error_message)
 {
     $sql = "SELECT id_usuario, nombre, email, pass, privilegio FROM usuario WHERE usuario = ?";
     $stmt = $conn->prepare($sql);
 
     $stmt->bind_param("s", $usuario);
     $stmt->execute();
-    $result = $stmt->get_result(); // Obtener el resultado de la consulta
+    $result = $stmt->get_result();
 
-    // Verificar si se encontró el usuario
     if ($result->num_rows > 0) {
-        $row = $result->fetch_assoc(); // Obtener los resultados como un array asociativo
-        // Asignar variables desde el array
+        $row = $result->fetch_assoc();
         $id_usuario = $row['id_usuario'];
         $nombre = $row['nombre'];
         $email = $row['email'];
         $storedHash = $row['pass'];
         $privilegio = $row['privilegio'];
-        // Verificar la contraseña ingresada contra el hash
+
         if (password_verify($enteredPassword, $storedHash)) {
-            // Almacenar datos del usuario en la sesión, excepto la contraseña
             $_SESSION['id_usuario'] = $id_usuario;
             $_SESSION['nombre'] = $nombre;
             $_SESSION['email'] = $email;
@@ -71,18 +72,24 @@ function loginUser($conn, $usuario, $enteredPassword)
             notificar($nombre, $email);
             header("Location: index.php");
             exit();
-        }else{
+        } else {
             notificarIntentoFallido($nombre, $email);
+            $error_message = "Usuario o contraseña incorrectos.";
         }
+    } else {
+        $error_message = "Usuario o contraseña incorrectos.";
     }
 }
+
 if (isset($_POST['login'])) {
     $usuario = $_POST['username'];
     $password = $_POST['password'];
-    loginUser($conn, $usuario, $password);
+    loginUser($conn, $usuario, $password, $error_message);
 }
+
 $db->close();
 ?>
+
 <!DOCTYPE html>
 <html lang="es">
 
@@ -209,6 +216,9 @@ $db->close();
         <div class="login-form">
             <a href="index.php" class="back-arrow">←</a>
             <h2>Iniciar sesión</h2>
+            <?php if (!empty($error_message)): ?>
+                <p style="color: red; font-size: 14px;"><?= htmlspecialchars($error_message) ?></p>
+            <?php endif; ?>
             <form action="" method="post">
                 <label for="username">Usuario:</label>
                 <input type="text" id="username" name="username" required>

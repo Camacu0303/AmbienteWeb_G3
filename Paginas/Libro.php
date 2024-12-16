@@ -2,7 +2,8 @@
 // Conexión a la base de datos
 require_once "../Utilidades/Conn.php";
 session_start();
-
+$requiredRole = 'usuario';
+require_once "../Utilidades/session_checkout.php";
 // Verifica que el formulario haya sido enviado
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $titulo = $_POST['titulo'];

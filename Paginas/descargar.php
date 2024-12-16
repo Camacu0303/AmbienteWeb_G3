@@ -1,7 +1,8 @@
 <?php
 require_once "../Utilidades/Conn.php";
 session_start();
-
+$requiredRole = 'usuario';
+require_once "../Utilidades/session_checkout.php";
 $db = new Database();
 $conn = $db->getConnection();
 

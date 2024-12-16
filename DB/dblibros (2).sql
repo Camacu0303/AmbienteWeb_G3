@@ -3,8 +3,8 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 16-12-2024 a las 06:28:17
--- Versión del servidor: 8.0.36
+-- Tiempo de generación: 16-12-2024 a las 07:29:03
+-- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
@@ -28,11 +28,11 @@ SET time_zone = "+00:00";
 --
 
 CREATE TABLE `blog` (
-  `id_blog` int NOT NULL,
-  `titulo` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
-  `contenido` text COLLATE utf8mb4_general_ci NOT NULL,
-  `id_usuario` int NOT NULL,
-  `fecha_publicacion` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP
+  `id_blog` int(11) NOT NULL,
+  `titulo` varchar(255) NOT NULL,
+  `contenido` text NOT NULL,
+  `id_usuario` int(11) NOT NULL,
+  `fecha_publicacion` datetime NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -60,7 +60,8 @@ INSERT INTO `blog` (`id_blog`, `titulo`, `contenido`, `id_usuario`, `fecha_publi
 (18, 'Publicación 17', 'Este es el contenido de la publicación 17.', 2, '2024-12-07 00:53:41'),
 (19, 'Publicación 18', 'Este es el contenido de la publicación 18.', 2, '2024-12-07 00:53:41'),
 (20, 'Publicación 19', 'Este es el contenido de la publicación 19.', 2, '2024-12-07 00:53:41'),
-(21, 'Publicación 20', 'Este es el contenido de la publicación 20.', 2, '2024-12-07 00:53:41');
+(21, 'Publicación 20', 'Este es el contenido de la publicación 20.', 2, '2024-12-07 00:53:41'),
+(22, 'Prueba', 'test', 10, '2024-12-16 00:13:06');
 
 -- --------------------------------------------------------
 
@@ -69,8 +70,8 @@ INSERT INTO `blog` (`id_blog`, `titulo`, `contenido`, `id_usuario`, `fecha_publi
 --
 
 CREATE TABLE `categoria` (
-  `id_categoria` int NOT NULL,
-  `nombre` varchar(100) COLLATE utf8mb4_general_ci NOT NULL
+  `id_categoria` int(11) NOT NULL,
+  `nombre` varchar(100) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -102,11 +103,11 @@ INSERT INTO `categoria` (`id_categoria`, `nombre`) VALUES
 --
 
 CREATE TABLE `comentarios_blog` (
-  `id_comentario` int NOT NULL,
-  `id_blog` int NOT NULL,
-  `id_usuario` int NOT NULL,
-  `contenido` text COLLATE utf8mb4_general_ci NOT NULL,
-  `fecha_comentario` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP
+  `id_comentario` int(11) NOT NULL,
+  `id_blog` int(11) NOT NULL,
+  `id_usuario` int(11) NOT NULL,
+  `contenido` text NOT NULL,
+  `fecha_comentario` datetime NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -128,8 +129,8 @@ INSERT INTO `comentarios_blog` (`id_comentario`, `id_blog`, `id_usuario`, `conte
 --
 
 CREATE TABLE `estado_intercambio` (
-  `id_estado` int NOT NULL,
-  `nombre_estado` varchar(50) COLLATE utf8mb4_general_ci NOT NULL
+  `id_estado` int(11) NOT NULL,
+  `nombre_estado` varchar(50) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -148,8 +149,8 @@ INSERT INTO `estado_intercambio` (`id_estado`, `nombre_estado`) VALUES
 --
 
 CREATE TABLE `estado_libro` (
-  `id_estado` int NOT NULL,
-  `nombre` varchar(50) COLLATE utf8mb4_general_ci NOT NULL
+  `id_estado` int(11) NOT NULL,
+  `nombre` varchar(50) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -173,8 +174,8 @@ INSERT INTO `estado_libro` (`id_estado`, `nombre`) VALUES
 --
 
 CREATE TABLE `idiomas` (
-  `id_idioma` int NOT NULL,
-  `nombre` varchar(100) COLLATE utf8mb4_general_ci NOT NULL
+  `id_idioma` int(11) NOT NULL,
+  `nombre` varchar(100) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -197,12 +198,12 @@ INSERT INTO `idiomas` (`id_idioma`, `nombre`) VALUES
 --
 
 CREATE TABLE `intercambio` (
-  `id_intercambio` int NOT NULL,
-  `id_usuario_ofreciente` int NOT NULL,
-  `id_usuario_receptor` int NOT NULL,
-  `id_libro_solicitado` int DEFAULT NULL,
+  `id_intercambio` int(11) NOT NULL,
+  `id_usuario_ofreciente` int(11) NOT NULL,
+  `id_usuario_receptor` int(11) NOT NULL,
+  `id_libro_solicitado` int(11) DEFAULT NULL,
   `fecha_intercambio` date NOT NULL,
-  `id_estado` int NOT NULL
+  `id_estado` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -219,15 +220,15 @@ INSERT INTO `intercambio` (`id_intercambio`, `id_usuario_ofreciente`, `id_usuari
 --
 
 CREATE TABLE `libro` (
-  `id_libro` int NOT NULL,
-  `titulo` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
-  `autor` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `id_categoria` int DEFAULT NULL,
-  `id_estado` int DEFAULT NULL,
-  `descripcion` varchar(1024) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `id_usuario` int DEFAULT NULL,
-  `archivo` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `imagen` varchar(255) COLLATE utf8mb4_general_ci NOT NULL
+  `id_libro` int(11) NOT NULL,
+  `titulo` varchar(255) NOT NULL,
+  `autor` varchar(255) DEFAULT NULL,
+  `id_categoria` int(11) DEFAULT NULL,
+  `id_estado` int(11) DEFAULT NULL,
+  `descripcion` varchar(1024) DEFAULT NULL,
+  `id_usuario` int(11) DEFAULT NULL,
+  `archivo` varchar(255) DEFAULT NULL,
+  `imagen` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -257,10 +258,10 @@ INSERT INTO `libro` (`id_libro`, `titulo`, `autor`, `id_categoria`, `id_estado`,
 --
 
 CREATE TABLE `seguidores` (
-  `id_seguimiento` int NOT NULL,
-  `id_usuario_seguidor` int NOT NULL,
-  `id_usuario_seguido` int NOT NULL,
-  `fecha_seguimiento` datetime DEFAULT CURRENT_TIMESTAMP
+  `id_seguimiento` int(11) NOT NULL,
+  `id_usuario_seguidor` int(11) NOT NULL,
+  `id_usuario_seguido` int(11) NOT NULL,
+  `fecha_seguimiento` datetime DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -278,11 +279,11 @@ INSERT INTO `seguidores` (`id_seguimiento`, `id_usuario_seguidor`, `id_usuario_s
 --
 
 CREATE TABLE `token_seguridad` (
-  `id` int NOT NULL,
-  `user_email` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
-  `token` varchar(512) COLLATE utf8mb4_general_ci NOT NULL,
+  `id` int(11) NOT NULL,
+  `user_email` varchar(255) NOT NULL,
+  `token` varchar(512) NOT NULL,
   `expires_at` datetime NOT NULL,
-  `created_at` datetime DEFAULT CURRENT_TIMESTAMP
+  `created_at` datetime DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -303,18 +304,18 @@ INSERT INTO `token_seguridad` (`id`, `user_email`, `token`, `expires_at`, `creat
 --
 
 CREATE TABLE `usuario` (
-  `id_usuario` int NOT NULL,
-  `nombre` varchar(100) COLLATE utf8mb4_general_ci NOT NULL,
-  `email` varchar(100) COLLATE utf8mb4_general_ci NOT NULL,
-  `usuario` varchar(20) COLLATE utf8mb4_general_ci NOT NULL,
-  `pass` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
-  `privilegio` varchar(50) COLLATE utf8mb4_general_ci NOT NULL,
-  `fecha_registro` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `foto_perfil` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `telefono` varchar(20) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `direccion` text COLLATE utf8mb4_general_ci,
-  `idioma_preferido` varchar(50) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `intereses` text COLLATE utf8mb4_general_ci
+  `id_usuario` int(11) NOT NULL,
+  `nombre` varchar(100) NOT NULL,
+  `email` varchar(100) NOT NULL,
+  `usuario` varchar(20) NOT NULL,
+  `pass` varchar(255) NOT NULL,
+  `privilegio` varchar(50) NOT NULL,
+  `fecha_registro` datetime NOT NULL DEFAULT current_timestamp(),
+  `foto_perfil` varchar(255) DEFAULT NULL,
+  `telefono` varchar(20) DEFAULT NULL,
+  `direccion` text DEFAULT NULL,
+  `idioma_preferido` varchar(50) DEFAULT NULL,
+  `intereses` text DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -329,7 +330,8 @@ INSERT INTO `usuario` (`id_usuario`, `nombre`, `email`, `usuario`, `pass`, `priv
 (6, 'Jose Mora Perez', 'jose@gmail.com', 'jose01', '$2y$10$CiIf0zniKzDVkDnxwVndf.clDjjpOaFdHh2xZpvP.bZUr.Fz6zeEO', 'usuario', '2024-12-15 22:30:57', 'Jose.jpg', '77774444', 'San Pedro, Montes de Oca', 'Español', 'Literatura Clásica,Fantasía,Romance'),
 (7, 'María Fernanda Murillo Mora', 'mariafer@gmail.com', 'marifer2000', '$2y$10$cvOADn2.MptU08dFdmzbMu0umUQrqnjQIs6CslO8vbEW/gSyuBxMu', 'usuario', '2024-12-15 23:08:06', 'fernanda.png', '55555555', 'Guatemala', 'Alemán', 'Ficción,Fantasía'),
 (8, 'Karla Gomez Marín', 'karlita2000@gmail.com', 'karla', '$2y$10$oo00JBr9MCmbXXqIdGpKPOu/ASnTilT8AfYsgfCinicf7Da4kRwxm', 'usuario', '2024-12-15 23:18:12', NULL, '', '', 'Español', 'No Ficción'),
-(9, 'Luis Miguel Calderon Jimenez', 'luismi@gmail.com', 'luis01', '$2y$10$IhEsKOxIvCbl5saaHfBbSuam4eEwrw2hgGyuFX7gqu/dWlN07yaIu', 'usuario', '2024-12-15 23:24:15', NULL, NULL, NULL, NULL, NULL);
+(9, 'Luis Miguel Calderon Jimenez', 'luismi@gmail.com', 'luis01', '$2y$10$IhEsKOxIvCbl5saaHfBbSuam4eEwrw2hgGyuFX7gqu/dWlN07yaIu', 'usuario', '2024-12-15 23:24:15', NULL, NULL, NULL, NULL, NULL),
+(10, 'Said VA', 'said@gmail.com', 'theBigS', '$2y$10$ZjxG1TW0VKI7VGzl.RIAs.0A/TLZAXtcTyweABOyh/JYk3wJHu9TC', 'usuario', '2024-12-15 23:58:25', NULL, NULL, NULL, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -338,11 +340,11 @@ INSERT INTO `usuario` (`id_usuario`, `nombre`, `email`, `usuario`, `pass`, `priv
 --
 
 CREATE TABLE `valoracion` (
-  `id_valoracion` int NOT NULL,
-  `id_usuario_receptor` int NOT NULL,
-  `id_usuario_ofreciente` int NOT NULL,
-  `calificacion` int NOT NULL,
-  `comentario` text COLLATE utf8mb4_general_ci,
+  `id_valoracion` int(11) NOT NULL,
+  `id_usuario_receptor` int(11) NOT NULL,
+  `id_usuario_ofreciente` int(11) NOT NULL,
+  `calificacion` int(11) NOT NULL,
+  `comentario` text DEFAULT NULL,
   `fecha` date NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -447,73 +449,73 @@ ALTER TABLE `valoracion`
 -- AUTO_INCREMENT de la tabla `blog`
 --
 ALTER TABLE `blog`
-  MODIFY `id_blog` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
+  MODIFY `id_blog` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
 
 --
 -- AUTO_INCREMENT de la tabla `categoria`
 --
 ALTER TABLE `categoria`
-  MODIFY `id_categoria` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
+  MODIFY `id_categoria` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
 
 --
 -- AUTO_INCREMENT de la tabla `comentarios_blog`
 --
 ALTER TABLE `comentarios_blog`
-  MODIFY `id_comentario` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id_comentario` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT de la tabla `estado_intercambio`
 --
 ALTER TABLE `estado_intercambio`
-  MODIFY `id_estado` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id_estado` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT de la tabla `estado_libro`
 --
 ALTER TABLE `estado_libro`
-  MODIFY `id_estado` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `id_estado` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT de la tabla `idiomas`
 --
 ALTER TABLE `idiomas`
-  MODIFY `id_idioma` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `id_idioma` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT de la tabla `intercambio`
 --
 ALTER TABLE `intercambio`
-  MODIFY `id_intercambio` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id_intercambio` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT de la tabla `libro`
 --
 ALTER TABLE `libro`
-  MODIFY `id_libro` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
+  MODIFY `id_libro` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
 
 --
 -- AUTO_INCREMENT de la tabla `seguidores`
 --
 ALTER TABLE `seguidores`
-  MODIFY `id_seguimiento` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id_seguimiento` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT de la tabla `token_seguridad`
 --
 ALTER TABLE `token_seguridad`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT de la tabla `usuario`
 --
 ALTER TABLE `usuario`
-  MODIFY `id_usuario` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `id_usuario` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT de la tabla `valoracion`
 --
 ALTER TABLE `valoracion`
-  MODIFY `id_valoracion` int NOT NULL AUTO_INCREMENT;
+  MODIFY `id_valoracion` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- Restricciones para tablas volcadas

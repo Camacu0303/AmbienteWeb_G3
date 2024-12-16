@@ -1,20 +1,19 @@
 <?php
 require_once "../Utilidades/Conn.php";
 session_start();
-$requiredRole = 'usuario';
-require_once "../Utilidades/session_checkout.php";
-$db = new Database();
-$conn = $db->getConnection();
 
 if (!isset($_POST['id'])) {
-    $_SESSION['mensaje'] = "ID no especificado.";
-    header("Location: Perfil.php");
+    echo json_encode(["mensaje" => "ID no especificado."]);
     exit;
 }
 
 $id_libro = intval($_POST['id']);
 
-// Borrar el archivo relacionado del servidor, si existe
+// Conexión a la base de datos
+$db = new Database();
+$conn = $db->getConnection();
+
+// Obtener la ruta del archivo asociado al libro
 $sqlArchivo = "SELECT archivo FROM libro WHERE id_libro = ?";
 $stmtArchivo = $conn->prepare($sqlArchivo);
 $stmtArchivo->bind_param("i", $id_libro);
@@ -25,7 +24,7 @@ if ($resultArchivo->num_rows === 1) {
     $libro = $resultArchivo->fetch_assoc();
     $archivoRuta = "../uploads/" . $libro['archivo'];
     if (file_exists($archivoRuta)) {
-        unlink($archivoRuta); 
+        unlink($archivoRuta);
     }
 }
 $stmtArchivo->close();
@@ -36,14 +35,11 @@ $stmt = $conn->prepare($sql);
 $stmt->bind_param("i", $id_libro);
 
 if ($stmt->execute()) {
-    $_SESSION['mensaje'] = "Libro eliminado correctamente.";
+    echo json_encode(["mensaje" => "Libro eliminado correctamente."]);
 } else {
-    $_SESSION['mensaje'] = "Error al eliminar el libro.";
+    echo json_encode(["mensaje" => "Error al eliminar el libro."]);
 }
 
 $stmt->close();
 $conn->close();
-
-header("Location: Perfil.php");
-exit;
 ?>

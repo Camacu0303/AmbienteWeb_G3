@@ -2,6 +2,40 @@
 $requiredRole = 'admin';
 require_once "../Utilidades/session_checkout.php";
 include("../Plantillas/nav.php");
+require_once "../Utilidades/Conn.php";
+$db = new Database();
+$conn = $db->getConnection();
+
+// Variables para almacenar las estadísticas
+$cantidadUsuarios = $cantidadLibros = $intercambiosPendientes = $intercambiosConcluidos = $totalBlogs = $totalIdiomas = 0;
+
+// Consulta para obtener las estadísticas
+$queryUsuarios = "SELECT COUNT(*) AS total FROM usuario";
+$queryLibros = "SELECT COUNT(*) AS total FROM libro";
+$queryIntercambiosPendientes = "SELECT COUNT(*) AS total FROM intercambio WHERE id_estado = 1";
+$queryIntercambiosConcluidos = "SELECT COUNT(*) AS total FROM intercambio WHERE id_estado = 2";
+$queryBlogs = "SELECT COUNT(*) AS total FROM blog";
+$queryIdiomas = "SELECT COUNT(*) AS total FROM idiomas";
+
+// Ejecutar consultas
+if ($result = $conn->query($queryUsuarios)) {
+    $cantidadUsuarios = $result->fetch_assoc()['total'];
+}
+if ($result = $conn->query($queryLibros)) {
+    $cantidadLibros = $result->fetch_assoc()['total'];
+}
+if ($result = $conn->query($queryIntercambiosPendientes)) {
+    $intercambiosPendientes = $result->fetch_assoc()['total'];
+}
+if ($result = $conn->query($queryIntercambiosConcluidos)) {
+    $intercambiosConcluidos = $result->fetch_assoc()['total'];
+}
+if ($result = $conn->query($queryBlogs)) {
+    $totalBlogs = $result->fetch_assoc()['total'];
+}
+if ($result = $conn->query($queryIdiomas)) {
+    $totalIdiomas = $result->fetch_assoc()['total'];
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -179,8 +213,86 @@ include("../Plantillas/nav.php");
 
             <div id="tab2" class="tab-panel">
                 <h2>Gestión de Libros y Documentos</h2>
-                <p>En construcción</p>
+                <div>
+                    <h3>Listado de Libros</h3>
+                    <table id="librosTable" class="display">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Título</th>
+                                <th>Autor</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- DataTables rellenará estos datos -->
+                        </tbody>
+                    </table>
+                </div>
+
+                <script>
+                    $(document).ready(function() {
+                        // Inicializar el DataTable
+                        const librosTable = $('#librosTable').DataTable({
+                            "processing": true,
+                            "serverSide": true,
+                            "serverSide": true,
+                            "ajax": {
+                                "url": "../ScriptsDB/get_books.php",
+                                "type": "POST",
+                                "dataSrc": "data"
+                            },
+
+                            "columns": [{
+                                    "data": "id_libro"
+                                },
+                                {
+                                    "data": "titulo"
+                                },
+                                {
+                                    "data": "autor"
+                                },
+                                {
+                                    "data": null,
+                                    "render": function(data, type, row) {
+                                        return `
+                                <a href="editarLibro.php?id=${row.id_libro}" class="edit-link"><i class="fas fa-edit"></i> Editar</a>
+                                <a href="#" class="delete-link" data-id="${row.id_libro}"><i class="fas fa-trash-alt"></i> Borrar</a>
+                            `;
+                                    }
+                                }
+                            ],
+                            "paging": true,
+                            "searching": true,
+                            "lengthChange": true,
+                            "pageLength": 10
+                        });
+
+                        // Manejar el evento de eliminación
+                        $('#librosTable tbody').on('click', '.delete-link', function(e) {
+                            e.preventDefault();
+                            const bookId = $(this).data('id');
+                            if (confirm("¿Estás seguro de que deseas eliminar este libro?")) {
+                                $.ajax({
+                                    url: '../ScriptsDB/delete_book.php',
+                                    type: 'POST',
+                                    data: {
+                                        id: bookId
+                                    },
+                                    success: function(response) {
+                                        librosTable.ajax.reload();
+                                        alert(response.mensaje || "Libro eliminado correctamente.");
+                                    },
+                                    error: function() {
+                                        alert("Error al eliminar el libro.");
+                                    }
+                                });
+                            }
+                        });
+                    });
+                </script>
             </div>
+
 
             <div id="tab3" class="tab-panel">
                 <h2>Gestión de categorías</h2>
@@ -281,7 +393,14 @@ include("../Plantillas/nav.php");
 
             <div id="tab4" class="tab-panel">
                 <h2>Estadísticas de uso</h2>
-                <p>En construcción...</p>
+                <ul>
+                    <li><strong>Cantidad de usuarios registrados:</strong> <?php echo $cantidadUsuarios; ?></li>
+                    <li><strong>Cantidad de libros disponibles:</strong> <?php echo $cantidadLibros; ?></li>
+                    <li><strong>Intercambios pendientes:</strong> <?php echo $intercambiosPendientes; ?></li>
+                    <li><strong>Intercambios concluidos:</strong> <?php echo $intercambiosConcluidos; ?></li>
+                    <li><strong>Total de publicaciones en el blog:</strong> <?php echo $totalBlogs; ?></li>
+                    <li><strong>Cantidad de idiomas disponibles:</strong> <?php echo $totalIdiomas; ?></li>
+                </ul>
             </div>
         </div>
     </div>

@@ -5,7 +5,7 @@ require_once '../Utilidades/Conn.php';
 $db = new Database();
 $conn = $db->getConnection();
 
-$idUsuarioActual = $_SESSION['id_usuario'] ?? null;
+$idUsuarioActual = $_SESSION['id_usuario'] ?? null; // Obtención del ID del usuario actual
 $limit = intval($_GET['limit'] ?? 10);
 $offset = intval($_GET['offset'] ?? 0);
 
@@ -14,7 +14,7 @@ if (!$idUsuarioActual) {
     exit;
 }
 
-
+// Consulta para obtener las publicaciones de los usuarios seguidos y del usuario actual
 $query = "
     SELECT b.id_blog, b.titulo, b.contenido, u.usuario AS autor, b.fecha_publicacion,
            (SELECT COUNT(*) FROM comentarios_blog c WHERE c.id_blog = b.id_blog) AS cantidad_comentarios
@@ -24,11 +24,13 @@ $query = "
         SELECT id_usuario_seguido
         FROM seguidores
         WHERE id_usuario_seguidor = ?
+        UNION
+        SELECT ? -- Para incluir el usuario actual
     )
     ORDER BY b.fecha_publicacion DESC
     LIMIT ? OFFSET ?";
 $stmt = $conn->prepare($query);
-$stmt->bind_param("iii", $idUsuarioActual, $limit, $offset);
+$stmt->bind_param("iiii", $idUsuarioActual, $idUsuarioActual, $limit, $offset);
 $stmt->execute();
 $result = $stmt->get_result();
 

@@ -1,4 +1,6 @@
 <?php
+$requiredRole = 'usuario';
+require_once "../Utilidades/session_checkout.php";
 require_once "../Utilidades/Conn.php";
 
 session_start();

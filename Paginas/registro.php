@@ -3,41 +3,52 @@
 require_once '../Utilidades/Conn.php';
 $db = new Database();
 $conn = $db->getConnection();
+
 function registerUser($conn, $nombre, $email, $usuario, $password)
 {
     $hashedPassword = password_hash($password, PASSWORD_BCRYPT);
     $sql = "INSERT INTO usuario (nombre, email, usuario, pass, privilegio, fecha_registro) 
             VALUES (?, ?, ?, ?, ?, DEFAULT)";
     $stmt = $conn->prepare($sql);
-    $privilegio = 'usuario'; 
+    $privilegio = 'usuario';
     $stmt->bind_param("sssss", $nombre, $email, $usuario, $hashedPassword, $privilegio);
-    
+
     if ($stmt->execute()) {
         // Redirigir al usuario a una página de éxito
-        header("Location: login.php"); 
+        header("Location: login.php");
         exit();
     } else {
         echo "Error al registrar el usuario: " . $stmt->error;
         exit();
     }
 }
-if (isset($_POST['register'])) {
-    $nombre = $_POST['name']; 
-    $email = $_POST['email']; 
-    $usuario = $_POST['username']; 
-    $password = $_POST['password'];
-    $confirm_password = $_POST['confirm_password']; 
 
-    if ($password !== $confirm_password) {
-        echo "Las contraseñas no coinciden. Inténtalo de nuevo.";
+$error_message = ""; // Variable para almacenar mensajes de error
+
+if (isset($_POST['register'])) {
+    $nombre = $_POST['name'];
+    $email = $_POST['email'];
+    $usuario = $_POST['username'];
+    $password = $_POST['password'];
+    $confirm_password = $_POST['confirm_password'];
+
+    // Validación de contraseña con regex
+    $passwordRegex = '/^(?=.*[A-Za-z]{4,})(?=.*\d{4,})(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{9,}$/';
+
+    if (!preg_match($passwordRegex, $password)) {
+        $error_message = "La contraseña debe contener al menos 4 letras, 4 números y 1 símbolo.";
+    } elseif ($password !== $confirm_password) {
+        $error_message = "Las contraseñas no coinciden. Inténtalo de nuevo.";
     } else {
         registerUser($conn, $nombre, $email, $usuario, $password);
     }
 }
+
 $db->close();
 ?>
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -136,15 +147,18 @@ $db->close();
         }
     </style>
 </head>
+
 <body>
     <div class="register-container">
-        <div class="register-image">
-        </div>
-
+        <div class="register-image"></div>
         <div class="register-form">
             <a href="index.php" class="back-arrow">←</a>
             <h2 class="register-title">Registro de nuevo usuario</h2>
             <form action="" method="post">
+                <?php if (!empty($error_message)): ?>
+                    <div class="error-message"><?php echo $error_message; ?></div>
+                <?php endif; ?>
+
                 <label for="name">Nombre:</label>
                 <input type="text" id="name" name="name" required>
 
@@ -163,7 +177,6 @@ $db->close();
                 <button type="submit" name="register" class="register-button">Continuar</button>
             </form>
         </div>
-
     </div>
 </body>
 
